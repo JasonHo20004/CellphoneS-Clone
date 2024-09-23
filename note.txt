@@ -1,0 +1,4 @@
+Websites:
+ - https://cdnjs.com/libraries/font-awesome
+ - https://cellphones.com.vn/
+ - https://fontawesome.com/icons
