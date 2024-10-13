@@ -114,3 +114,15 @@ CREATE TABLE order_details(
     total_money FLOAT CHECK (total_money ›= 0),
     color VARCHAR (20) DEFAULT ''
 );
+
+CREATE TABLE reviews (
+    id INT NOT NULL AUTO_INCREMENT,
+    user_id INT,
+    product_id INT,
+    score INT,
+    comment LONGTEXT,
+    date DATETIME,
+    PRIMARY KEY (id),
+    FOREIGN KEY (user_id) REFERENCES users(id),
+    FOREIGN KEY (product_id) REFERENCES products(product_id)
+);
