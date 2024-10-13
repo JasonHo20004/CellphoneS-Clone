@@ -2,3 +2,17 @@ Websites:
  - https://cdnjs.com/libraries/font-awesome
  - https://cellphones.com.vn/
  - https://fontawesome.com/icons
+
+
+Setup Java Spring Boot framework:
+ + Go to this link: -> https://start.spring.io/
+ + Add Dependencies: Spring Web, Spring Data JPA, Lombok, MySql Driver, Validation.
+ + Generate.
+
+
+HTTP response status codes:
+HttpStatus.NO_CONTENT - 204
+HttpStatus.BAD_REQUEST - 400
+HttpStatus.UNAUTHORIZED - 401
+HttpStatus.NOT_FOUND - 404
+HttpStatus.REQUEST_TIMEOUT - 408
