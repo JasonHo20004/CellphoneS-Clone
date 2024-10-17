@@ -80,6 +80,14 @@ CREATE TABLE products (
     FOREIGN KEY (brands_id) REFERENCES brands(id)
 );
 
+CREATE TABLE product_images(
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    product_id INT,
+    FOREIGN KEY (product_id) REFERENCES products (product_id),
+    CONSTRAINT fk_product_images_product_id
+        FOREIGN KEY (product_id) REFERENCES products (id) ON DELETE CASCADE
+);
+
 --Bang orders
 CREATE TABLE orders (
     id INT PRIMARY KEY AUTO_INCREMENT,
