@@ -5,7 +5,7 @@ USE CellphoneSClone
 CREATE TABLE users(
     id INT NOT NULL AUTO_INCREMENT,
     fullname VARCHAR(100) DEFAULT '',
-    phonenumber VARCHAR(10) NOT NULL,
+    phone_number VARCHAR(10) NOT NULL,
     user_address VARCHAR(200) DEFAULT '',
     user_password VARCHAR(100) NOT NULL DEFAULT '', -- mật khẩu đã được mã hóa
     created_at DATETIME,
@@ -85,7 +85,8 @@ CREATE TABLE product_images(
     product_id INT,
     FOREIGN KEY (product_id) REFERENCES products (product_id),
     CONSTRAINT fk_product_images_product_id
-        FOREIGN KEY (product_id) REFERENCES products (id) ON DELETE CASCADE
+        FOREIGN KEY (product_id) REFERENCES products (id) ON DELETE CASCADE,
+    image_url VARCHAR(300)
 );
 
 --Bang orders
