@@ -23,7 +23,7 @@ a {
 }
 
 header {
-    background-color: #FED100;
+    background-color: #e9efff;
     text-align: center;
     height: 44px;
 }
@@ -32,7 +32,7 @@ header {
 /*--------nav---------*/
 
 nav {
-    background-color: black;
+    background-color: #d70018;
 }
 
 nav ul {
@@ -142,13 +142,19 @@ nav ul li:nth-child(9):hover a {
 /*----------------menu-bar--------------*/
 
 .menu-bar {
-    background-color: rgb(254, 209, 0);
+    background-color: #e9efff;
 }
 
 .menu-bar ul {
     display: flex;
-    justify-content: space-between;
+    justify-content: center; /* Center the menu items */
     text-align: center;
+    padding: 0; /* Remove default padding */
+    margin: 0; /* Remove default margin */
+}
+
+.menu-bar ul li {
+    list-style-type: none; /* Remove bullet points */
 }
 
 .menu-bar ul li a {
@@ -161,7 +167,7 @@ nav ul li:nth-child(9):hover a {
     font-size: 15px;
 }
 
-.menu-bar-content>ul>li {
+.menu-bar-content > ul > li {
     padding: 12px 11px;
     transition: all 0.3s ease;
 }
@@ -170,11 +176,11 @@ nav ul li:nth-child(9):hover a {
     background-color: white;
 }
 
-.menu-bar-content>ul>li:nth-child(9) {
+.menu-bar-content > ul > li:nth-child(9) {
     position: relative;
 }
 
-.menu-bar-content>ul>li:nth-child(9):before {
+.menu-bar-content > ul > li:nth-child(9):before {
     position: absolute;
     content: "Giảm 5%";
     display: block;
@@ -189,7 +195,7 @@ nav ul li:nth-child(9):hover a {
     color: #fff;
 }
 
-.menu-bar-content>ul>li:nth-child(9)::after {
+.menu-bar-content > ul > li:nth-child(9)::after {
     position: absolute;
     content: "";
     background-color: #F51212;
