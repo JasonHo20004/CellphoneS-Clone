@@ -3,6 +3,7 @@ package com.example.cellphonesclone.models;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
@@ -35,7 +36,7 @@ public class Product extends BaseEntity{
     private String operatingSystem;
 
     @Column(name = "screen_size", precision = 5, scale = 2)
-    private Double screenSize;
+    private BigDecimal screenSize;
 
     @Column(name = "battery_capacity")
     private Integer batteryCapacity;
@@ -59,6 +60,6 @@ public class Product extends BaseEntity{
     private LocalDateTime releaseDate;
 
     @ManyToOne
-    @JoinColumn(name = "brands_id", referencedColumnName = "id")
+    @JoinColumn(name = "brands_id")
     private Brand brand;
 }

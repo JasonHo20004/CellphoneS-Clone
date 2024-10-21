@@ -19,7 +19,7 @@ public class Token {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "token_value", nullable = false, length = 255)
+    @Column(name = "token_value", nullable = false, length = 200)
     private String tokenValue;
 
     @Column(name = "token_type, length =255")
