@@ -10,8 +10,8 @@ This project aims to develop a comprehensive e-commerce platform dedicated to se
 
 ## Technologies Used
 - **Frontend:** HTML, CSS, JavaScript (Angular.js)
-- **Backend:** TBA
-- **Database:** TBA
+- **Backend:** Java (Springboot framework)
+- **Database:** MySQL
 - **Payment Integration:** Stripe
 - **Deployment:** TBA
 
