@@ -6,8 +6,12 @@ import com.example.cellphonesclone.models.Role;
 import com.example.cellphonesclone.models.User;
 import com.example.cellphonesclone.respositories.RoleRepository;
 import com.example.cellphonesclone.respositories.UserRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.stereotype.Service;
 
+@Service
+@RequiredArgsConstructor
 public class UserService implements IUserService{
     private UserRepository userRepository;
     private RoleRepository roleRepository;

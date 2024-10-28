@@ -58,7 +58,7 @@ public class Product extends BaseEntity{
     private String color;
 
     @Column(name = "release_date")
-    private LocalDateTime releaseDate;
+    private Integer releaseDate;
 
     @ManyToOne
     @JoinColumn(name = "brands_id")

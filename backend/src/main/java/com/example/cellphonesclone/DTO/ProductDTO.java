@@ -8,6 +8,7 @@ import jakarta.validation.constraints.Size;
 import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.List;
 
@@ -34,7 +35,7 @@ public class ProductDTO {
     private String operatingSystem;
 
     @JsonProperty("screen_size")
-    private Double screenSize;
+    private BigDecimal screenSize;
 
     @JsonProperty("battery_capacity")
     private Integer batteryCapacity;
@@ -58,8 +59,6 @@ public class ProductDTO {
     private Integer inStock;
 
     @JsonProperty("brand_id")
-    private Integer brandId;
-
-    private List<MultipartFile> files;
+    private Long brandId;
 }
 
