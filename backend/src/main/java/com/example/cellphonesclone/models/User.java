@@ -39,4 +39,8 @@ public class User extends BaseEntity{
 
     @Column(name = "google_account_id")
     private int googleAccountID;
+
+    @ManyToOne
+    @JoinColumn(name = "role_id")
+    private com.example.cellphonesclone.models.Role role;
 }

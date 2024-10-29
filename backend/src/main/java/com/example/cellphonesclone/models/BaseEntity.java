@@ -29,8 +29,4 @@ public class BaseEntity {
     protected void onUpdate(){
         updatedAt = LocalDateTime.now();
     }
-
-    @ManyToOne
-    @JoinColumn(name = "role_id")
-    private com.example.cellphonesclone.models.Role role;
 }
