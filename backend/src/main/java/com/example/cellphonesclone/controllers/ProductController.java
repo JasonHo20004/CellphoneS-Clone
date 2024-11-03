@@ -1,15 +1,11 @@
 package com.example.cellphonesclone.controllers;
-
 import com.example.cellphonesclone.DTO.ProductDTO;
 import com.example.cellphonesclone.DTO.ProductImageDTO;
 import com.example.cellphonesclone.models.Product;
 import com.example.cellphonesclone.models.ProductImage;
 import com.example.cellphonesclone.services.IProductService;
-import jakarta.websocket.server.PathParam;
 import lombok.RequiredArgsConstructor;
-import org.apache.catalina.util.StringUtil;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
@@ -18,7 +14,6 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import jakarta.validation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
 import java.nio.file.Files;
