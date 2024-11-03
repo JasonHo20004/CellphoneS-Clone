@@ -75,6 +75,9 @@ public class ProductController {
         try {
             Product existingProduct = productService.getProductByID(ProductID);
             files = files == null ? new ArrayList<MultipartFile>() : files;
+            if (files.size() > ProductImage.MAXIMUM_IMAGES_PER_PRODUCT){
+                return ResponseEntity.badRequest().body("You can upload 5 images at a time");
+            }
             List<ProductImage> productImages = new ArrayList<>();
             for (MultipartFile file : files){
                 if (file.getSize()==0){
@@ -105,6 +108,9 @@ public class ProductController {
     }
 
     private String storeFile(MultipartFile file) throws IOException{
+        if (!isImageFile(file) || file.getOriginalFilename() == null){
+            throw new IOException("Invalid image format");
+        }
         String filename = StringUtils.cleanPath(Objects.requireNonNull(file.getOriginalFilename()));
         //Thêm UID vao truoc ten file de unique
         String uniqueFilename = UUID.randomUUID().toString() + '_' + filename;
@@ -119,6 +125,11 @@ public class ProductController {
         //Sao chep file vao thu muc dich
         Files.copy(file.getInputStream(),direction, StandardCopyOption.REPLACE_EXISTING);
         return uniqueFilename;
+    }
+
+    private boolean isImageFile(MultipartFile file){
+        String contentType = file.getContentType();
+        return contentType != null && contentType.startsWith("images/");
     }
 
     @GetMapping("")
