@@ -1,4 +1,5 @@
-package com.example.cellphonesclone.DTO;
+package com.example.cellphonesclone.responses;
+
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.Max;
@@ -9,19 +10,15 @@ import lombok.*;
 
 import java.math.BigDecimal;
 
-
-@Data
 @Setter
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ProductDTO {
-    @NotBlank(message = "Title is required")
-    @Size(min = 3, max = 200, message = "Title must between 3 and 200 characters")
+@Builder
+public class ProductResponse extends BaseResponse{
+
     private String name;
 
-    @Min(value = 0, message = "Price must be greater than or equal to 0")
-    @Max(value = 100000000, message = "Price must be less than or equal to 100,000,000")
     @JsonProperty("price")
     private Float price;
 
@@ -59,4 +56,3 @@ public class ProductDTO {
     @JsonProperty("brand_id")
     private Long brandId;
 }
-

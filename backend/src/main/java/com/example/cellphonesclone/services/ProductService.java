@@ -7,6 +7,7 @@ import com.example.cellphonesclone.exceptions.InvalidParamException;
 import com.example.cellphonesclone.models.Brand;
 import com.example.cellphonesclone.models.Product;
 import com.example.cellphonesclone.models.ProductImage;
+import com.example.cellphonesclone.responses.ProductResponse;
 import com.example.cellphonesclone.respositories.BrandRespository;
 import com.example.cellphonesclone.respositories.ProductImageRepository;
 import com.example.cellphonesclone.respositories.ProductRepository;
@@ -56,9 +57,30 @@ public class ProductService implements IProductService{
     }
 
     @Override
-    public Page<Product> getAllProduct(PageRequest pageRequest) {
+    public Page<ProductResponse> getAllProduct(PageRequest pageRequest) {
         //Lay danh sach san pham theo trang(page) va gioihan (limit)
-        return productRepository.findAll(pageRequest);
+        return productRepository.findAll(pageRequest).map(product -> {
+            ProductResponse productResponse = ProductResponse.builder()
+                    .name(product.getName())
+                    .price(product.getPrice())
+                    .thumbnail(product.getThumbnail())
+                    .description(product.getDescription())
+                    .brandId(product.getProductId())
+                    .rom(product.getRom())
+                    .ram(product.getRam())
+                    .batteryCapacity(product.getBatteryCapacity())
+                    .color(product.getColor())
+                    .frontCamera(product.getFrontCamera())
+                    .mainCamera(product.getMainCamera())
+                    .operatingSystem(product.getOperatingSystem())
+                    .screenSize(product.getScreenSize())
+                    .inStock(product.getInStock())
+                    .releaseDate(product.getReleaseDate())
+                    .build();
+            productResponse.setCreatedAt(product.getCreatedAt());
+            productResponse.setUpdatedAt(product.getUpdatedAt());
+            return productResponse;
+        });
     }
 
     @Override

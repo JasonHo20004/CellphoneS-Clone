@@ -3,8 +3,13 @@ import com.example.cellphonesclone.DTO.ProductDTO;
 import com.example.cellphonesclone.DTO.ProductImageDTO;
 import com.example.cellphonesclone.models.Product;
 import com.example.cellphonesclone.models.ProductImage;
+import com.example.cellphonesclone.responses.ProductListResponse;
+import com.example.cellphonesclone.responses.ProductResponse;
 import com.example.cellphonesclone.services.IProductService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -133,9 +138,17 @@ public class ProductController {
     }
 
     @GetMapping("")
-    public ResponseEntity<String> getProducts(@RequestParam("page") int page, @RequestParam("limit") int limit)
+    public ResponseEntity<ProductListResponse> getProducts(@RequestParam("page") int page, @RequestParam("limit") int limit)
     {
-        return ResponseEntity.ok("get products here");
+        PageRequest pageRequest = PageRequest.of(page, limit, Sort.by("createdAt").descending());
+        Page<ProductResponse> productPage = productService.getAllProduct(pageRequest);
+
+        int totalPages = productPage.getTotalPages();
+        List<ProductResponse> products = productPage.getContent();
+        return ResponseEntity.ok(ProductListResponse.builder()
+                        .products(products)
+                        .totalPages(totalPages)
+                        .build());
     }
 
     @GetMapping("/{id}")
