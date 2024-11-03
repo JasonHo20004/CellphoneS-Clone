@@ -59,28 +59,7 @@ public class ProductService implements IProductService{
     @Override
     public Page<ProductResponse> getAllProduct(PageRequest pageRequest) {
         //Lay danh sach san pham theo trang(page) va gioihan (limit)
-        return productRepository.findAll(pageRequest).map(product -> {
-            ProductResponse productResponse = ProductResponse.builder()
-                    .name(product.getName())
-                    .price(product.getPrice())
-                    .thumbnail(product.getThumbnail())
-                    .description(product.getDescription())
-                    .brandId(product.getProductId())
-                    .rom(product.getRom())
-                    .ram(product.getRam())
-                    .batteryCapacity(product.getBatteryCapacity())
-                    .color(product.getColor())
-                    .frontCamera(product.getFrontCamera())
-                    .mainCamera(product.getMainCamera())
-                    .operatingSystem(product.getOperatingSystem())
-                    .screenSize(product.getScreenSize())
-                    .inStock(product.getInStock())
-                    .releaseDate(product.getReleaseDate())
-                    .build();
-            productResponse.setCreatedAt(product.getCreatedAt());
-            productResponse.setUpdatedAt(product.getUpdatedAt());
-            return productResponse;
-        });
+        return productRepository.findAll(pageRequest).map(ProductResponse::fromProduct);
     }
 
     @Override

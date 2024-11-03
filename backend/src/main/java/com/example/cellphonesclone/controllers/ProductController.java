@@ -18,6 +18,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.support.SimpleTriggerContext;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -25,6 +26,7 @@ import org.springframework.web.bind.annotation.*;
 import jakarta.validation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.awt.desktop.UserSessionEvent;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.nio.file.Files;
@@ -158,17 +160,39 @@ public class ProductController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<String> getProductByID(@PathVariable("id") String productID){
-        return ResponseEntity.ok("get product with ID: "  +productID);
+    public ResponseEntity<?> getProductByID(@PathVariable("id") Long productID){
+        try {
+            Product existingProduct = productService.getProductByID(productID);
+            return ResponseEntity.ok(ProductResponse.fromProduct(existingProduct));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteProductByID(@PathVariable long id){
-        return ResponseEntity.ok(String.format("Product with id = %d deleted successfully.", id));
+        try {
+            productService.deleteProduct(id);
+            return ResponseEntity.ok(String.format("Product with id = %d deleted successfully", id));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+
     }
 
-    @PostMapping("/generateFakeProducts")
-    public ResponseEntity<String> generateFakeProducts() {
+    @PutMapping("/{id}")
+    public ResponseEntity<?> updateProduct(@PathVariable long id, @RequestBody ProductDTO productDTO){
+        try {
+            Product updatedProduct = productService.updateProduct(id, productDTO);
+            return ResponseEntity.ok(updatedProduct);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+
+    //@PostMapping("/generateFakeProducts")
+    private ResponseEntity<String> generateFakeProducts() {
         Faker faker = new Faker();
 
         List<String> phoneModels = Arrays.asList(

@@ -1,11 +1,8 @@
 package com.example.cellphonesclone.responses;
 
 
+import com.example.cellphonesclone.models.Product;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
 import lombok.*;
 
 import java.math.BigDecimal;
@@ -55,4 +52,27 @@ public class ProductResponse extends BaseResponse{
 
     @JsonProperty("brand_id")
     private Long brandId;
+
+    public static ProductResponse fromProduct(Product product){
+        ProductResponse productResponse = ProductResponse.builder()
+                .name(product.getName())
+                .price(product.getPrice())
+                .thumbnail(product.getThumbnail())
+                .description(product.getDescription())
+                .brandId(product.getBrand().getId())
+                .rom(product.getRom())
+                .ram(product.getRam())
+                .batteryCapacity(product.getBatteryCapacity())
+                .color(product.getColor())
+                .frontCamera(product.getFrontCamera())
+                .mainCamera(product.getMainCamera())
+                .operatingSystem(product.getOperatingSystem())
+                .screenSize(product.getScreenSize())
+                .inStock(product.getInStock())
+                .releaseDate(product.getReleaseDate())
+                .build();
+        productResponse.setCreatedAt(product.getCreatedAt());
+        productResponse.setUpdatedAt(product.getUpdatedAt());
+        return productResponse;
+    }
 }
