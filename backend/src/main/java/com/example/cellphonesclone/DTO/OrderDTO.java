@@ -9,6 +9,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 @Data
@@ -19,7 +20,7 @@ public class OrderDTO {
 
     @JsonProperty("user_id")
     @Min(value = 1, message = "User's ID must be > 0")
-    private Integer userID;
+    private Long userID;
 
     @JsonProperty("fullname")
     private String fullName;
@@ -41,6 +42,9 @@ public class OrderDTO {
 
     @JsonProperty("shipping_method")
     private String shippingMethod;
+
+    @JsonProperty("shipping_date")
+    private LocalDate shippingDate;
 
     @JsonProperty("payment_method")
     private String paymentMethod;

@@ -1,18 +1,23 @@
 package com.example.cellphonesclone.controllers;
 import com.example.cellphonesclone.DTO.OrderDTO;
 
-import com.example.cellphonesclone.DTO.BrandDTO;
+import com.example.cellphonesclone.models.Order;
+import com.example.cellphonesclone.services.IOrderService;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
-import java.util.List;
+
 import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("${api.prefix}/orders")
+@RequiredArgsConstructor
 public class OrderController {
+    private final IOrderService orderService;
+
     @PostMapping()
     public ResponseEntity<?> createOrder(@Valid @RequestBody OrderDTO orderDTO, BindingResult result){
         try {
@@ -23,7 +28,8 @@ public class OrderController {
                         .collect(Collectors.joining(", "));
                 return ResponseEntity.badRequest().body(errorMessages);
             }
-            return ResponseEntity.ok("Order created successfully!");
+            Order orderResponse = orderService.createOrder(orderDTO);
+            return ResponseEntity.ok(orderResponse);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
