@@ -10,6 +10,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
@@ -35,10 +36,22 @@ public class OrderController {
         }
     }
 
-    @GetMapping("/{user_id}")
+    @GetMapping("/user/{user_id}")
     public ResponseEntity<?> getOrders(@Valid @PathVariable("user_id") Long userID){
         try{
-            return ResponseEntity.ok("Lay ra danh sach order tu user_id");
+            List<Order> orderList = orderService.findByUserId(userID);
+            return ResponseEntity.ok(orderList);
+        }
+        catch (Exception e){
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/{order_id}")
+    public ResponseEntity<?> getOrder(@Valid @PathVariable("order_id") Long orderId){
+        try{
+            Order existingOrder = orderService.getOrder(orderId);
+            return ResponseEntity.ok(existingOrder);
         }
         catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -47,7 +60,13 @@ public class OrderController {
 
     @PutMapping("/{id}")
     public ResponseEntity<?> updateOrder(@Valid @PathVariable long id, @Valid @RequestBody OrderDTO orderDTO){
-        return ResponseEntity.ok("Cap nhat thong tin 1 order");
+        try{
+            Order order = orderService.updateOrder(id, orderDTO);
+            return ResponseEntity.ok(order);
+        }
+        catch (Exception e){
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @DeleteMapping("/{id}")

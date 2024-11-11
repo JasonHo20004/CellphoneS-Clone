@@ -40,6 +40,9 @@ public class OrderDTO {
     @Min(value = 0, message = "Total money must >= 0")
     private Float totalMoney;
 
+    @JsonProperty("shipping_address")
+    private String shippingAddress;
+
     @JsonProperty("shipping_method")
     private String shippingMethod;
 

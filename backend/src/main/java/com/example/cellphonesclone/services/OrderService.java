@@ -47,12 +47,22 @@ public class OrderService implements IOrderService{
 
     @Override
     public Order getOrder(Long id) {
-        return null;
+        return orderRepository.findById(id).orElse(null);
     }
 
     @Override
-    public Order updateOrder(Long id, OrderDTO orderDTO) {
-        return null;
+    public Order updateOrder(Long id, OrderDTO orderDTO) throws DataNotFoundException {
+        Order order = orderRepository.findById(id).orElseThrow(()->
+                new DataNotFoundException("Cannot find order with id = "+id));
+        User existingUser = userRepository.findById(orderDTO.getUserID()).orElseThrow(()->
+                new DataNotFoundException("Cannot find order with id = "+id));
+        //Tao luong anh xa rieng de kiem soat viec anh xa
+        modelMapper.typeMap(OrderDTO.class, Order.class)
+                .addMappings(mapper->mapper.skip(Order::setId));
+        //Cap nhat cac truong cua don hang tu OrderDTO
+        modelMapper.map(orderDTO, order);
+        order.setUser(existingUser);
+        return orderRepository.save(order);
     }
 
     @Override
@@ -61,7 +71,7 @@ public class OrderService implements IOrderService{
     }
 
     @Override
-    public List<Order> getAllOrders(Long userId) {
-        return List.of();
+    public List<Order> findByUserId(Long userId) {
+        return orderRepository.findByUser_Id(userId);
     }
 }
