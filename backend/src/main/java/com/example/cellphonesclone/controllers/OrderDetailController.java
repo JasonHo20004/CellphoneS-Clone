@@ -1,31 +1,42 @@
 package com.example.cellphonesclone.controllers;
 
 import com.example.cellphonesclone.DTO.OrderDetailDTO;
+import com.example.cellphonesclone.exceptions.DataNotFoundException;
+import com.example.cellphonesclone.models.OrderDetail;
+import com.example.cellphonesclone.services.OrderDetailService;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
-import java.util.stream.Collectors;
+
 
 @RestController
 @RequestMapping("${api.prefix}/order_details")
+@RequiredArgsConstructor
 public class OrderDetailController {
+    private final OrderDetailService orderDetailService;
     @PostMapping
     public ResponseEntity<?> createOrderDetail(@Valid @RequestBody OrderDetailDTO orderDetailDTO){
-        return ResponseEntity.ok("create order detail here");
+        try {
+            OrderDetail orderDetail = orderDetailService.createOrderDetail(orderDetailDTO);
+            return ResponseEntity.ok(orderDetail);
+        } catch (DataNotFoundException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getOrderDetail(@Valid @PathVariable("id") Long id){
-        return ResponseEntity.ok("get order detail with id" +id);
+    public ResponseEntity<?> getOrderDetail(@Valid @PathVariable("id") Long id) throws DataNotFoundException {
+        OrderDetail orderDetail = orderDetailService.getOrderDetail(id);
+        return ResponseEntity.ok(orderDetail);
     }
 
     @GetMapping("/order/{orderID}")
     public ResponseEntity<?> getOrderDetails(@Valid @PathVariable("orderID") Long orderID){
-        //List<OrderDetail> orderDetails = orderDetailService.getOrderDetails(orderID);
-        return ResponseEntity.ok("get order details with orderID ="+orderID);
+        List<OrderDetail> orderDetails = orderDetailService.findByOrderId(orderID);
+        return ResponseEntity.ok(orderDetails);
     }
 
     @PutMapping("/{id}")

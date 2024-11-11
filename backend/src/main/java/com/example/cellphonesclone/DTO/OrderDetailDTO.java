@@ -16,7 +16,7 @@ public class OrderDetailDTO {
 
     @JsonProperty("order_id")
     @Min(value = 1, message = "Order's ID must be > 0")
-    private Integer orderID;
+    private Long orderID;
 
     @JsonProperty("product_id")
     @Min(value = 1, message = "Product's ID must be > 0")
