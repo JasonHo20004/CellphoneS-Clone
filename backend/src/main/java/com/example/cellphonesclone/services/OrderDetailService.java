@@ -9,9 +9,11 @@ import com.example.cellphonesclone.respositories.OrderDetailRepository;
 import com.example.cellphonesclone.respositories.OrderRepository;
 import com.example.cellphonesclone.respositories.ProductRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 @RequiredArgsConstructor
 public class OrderDetailService implements IOderDetailService{
     private final OrderRepository orderRepository;
@@ -26,10 +28,11 @@ public class OrderDetailService implements IOderDetailService{
                 .orElseThrow(()->new DataNotFoundException("Cannot find Order with id: "+orderDetailDTO.getOrderID()));
         Product product = productRepository.findById(orderDetailDTO.getOrderID())
                 .orElseThrow(()->new DataNotFoundException("Cannot find Product with id: "+orderDetailDTO.getOrderID()));
-        OrderDetail orderDetail = new OrderDetail().builder()
+        OrderDetail orderDetail = OrderDetail.builder()
                 .order(order)
                 .product(product)
                 .numberOfProducts(orderDetailDTO.getNumberOfProducts())
+                .price(orderDetailDTO.getPrice())
                 .totalMoney(orderDetailDTO.getTotalMoney())
                 .build();
         return orderDetailRepository.save(orderDetail);

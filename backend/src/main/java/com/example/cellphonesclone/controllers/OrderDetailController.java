@@ -3,6 +3,7 @@ package com.example.cellphonesclone.controllers;
 import com.example.cellphonesclone.DTO.OrderDetailDTO;
 import com.example.cellphonesclone.exceptions.DataNotFoundException;
 import com.example.cellphonesclone.models.OrderDetail;
+import com.example.cellphonesclone.responses.OrderDetailResponse;
 import com.example.cellphonesclone.services.OrderDetailService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +22,7 @@ public class OrderDetailController {
     public ResponseEntity<?> createOrderDetail(@Valid @RequestBody OrderDetailDTO orderDetailDTO){
         try {
             OrderDetail orderDetail = orderDetailService.createOrderDetail(orderDetailDTO);
-            return ResponseEntity.ok(orderDetail);
+            return ResponseEntity.ok().body(OrderDetailResponse.fromOrderDetail(orderDetail));
         } catch (DataNotFoundException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
