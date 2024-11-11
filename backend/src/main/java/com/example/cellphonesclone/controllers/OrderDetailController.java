@@ -31,22 +31,32 @@ public class OrderDetailController {
     @GetMapping("/{id}")
     public ResponseEntity<?> getOrderDetail(@Valid @PathVariable("id") Long id) throws DataNotFoundException {
         OrderDetail orderDetail = orderDetailService.getOrderDetail(id);
-        return ResponseEntity.ok(orderDetail);
+        return ResponseEntity.ok().body(OrderDetailResponse.fromOrderDetail(orderDetail));
+        //return ResponseEntity.ok(orderDetail);
     }
 
     @GetMapping("/order/{orderID}")
     public ResponseEntity<?> getOrderDetails(@Valid @PathVariable("orderID") Long orderID){
         List<OrderDetail> orderDetails = orderDetailService.findByOrderId(orderID);
-        return ResponseEntity.ok(orderDetails);
+        List<OrderDetailResponse> orderDetailResponses = orderDetails.stream()
+                .map(OrderDetailResponse::fromOrderDetail).toList();
+        return ResponseEntity.ok(orderDetailResponses);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateOrderDetail(@Valid @PathVariable("id") Long id, @RequestBody OrderDetailDTO newOrderDetailData){
-        return ResponseEntity.ok("update order detail with id = "+ id+", new order detail data:"+newOrderDetailData);
+    public ResponseEntity<?> updateOrderDetail(@Valid @PathVariable("id") Long id, @RequestBody OrderDetailDTO orderDetailDTO){
+        try {
+            OrderDetail orderDetail =  orderDetailService.updateOrderDetail(id, orderDetailDTO);
+            return ResponseEntity.ok().body(orderDetail);
+        } catch (DataNotFoundException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteOrderDetail(@Valid @PathVariable("id") Long id){
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<?> deleteOrderDetail(@Valid @PathVariable("id") Long id){
+        orderDetailService.deleteById(id);
+        return ResponseEntity.ok().body("Delete OrderDetail with id = "+id +" successfully!");
+        //return ResponseEntity.noContent().build();
     }
 }

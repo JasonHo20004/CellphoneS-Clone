@@ -45,12 +45,25 @@ public class OrderDetailService implements IOderDetailService{
     }
 
     @Override
-    public OrderDetail updateOrderDetail(Long id, OrderDetailDTO newOrderDetailData) {
-        return null;
+    public OrderDetail updateOrderDetail(Long id, OrderDetailDTO orderDetailDTO) throws DataNotFoundException {
+        //tim xem orderdetail co ton tai kh?
+        OrderDetail existingOrderDetail = orderDetailRepository.findById(id).orElseThrow(()->
+                new DataNotFoundException("Cannot find OrderDetail with id = "+id));
+        //kiem tra orderi co thuoc ve order nao` do kh?
+        Order existingOrder = orderRepository.findById(orderDetailDTO.getOrderID()).orElseThrow(()->
+                new DataNotFoundException("Cannot find Order with id = "+id));
+        Product existingProduct = productRepository.findById(orderDetailDTO.getOrderID())
+                .orElseThrow(()->new DataNotFoundException("Cannot find Product with id: "+orderDetailDTO.getOrderID()));
+        existingOrderDetail.setPrice(orderDetailDTO.getPrice());
+        existingOrderDetail.setNumberOfProducts(orderDetailDTO.getNumberOfProducts());
+        existingOrderDetail.setTotalMoney(orderDetailDTO.getTotalMoney());
+        existingOrderDetail.setOrder(existingOrder);
+        existingOrderDetail.setProduct(existingProduct);
+        return orderDetailRepository.save(existingOrderDetail);
     }
 
     @Override
-    public void deleteOrderDetail(Long id) {
+    public void deleteById(Long id) {
         orderDetailRepository.deleteById(id);
     }
 
