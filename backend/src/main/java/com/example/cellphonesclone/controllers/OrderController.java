@@ -72,6 +72,7 @@ public class OrderController {
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteOrder(@Valid @PathVariable Long id){
         //Xoa thi cap nhat truong active true -> false
+        orderService.deleteOrder(id);
         return ResponseEntity.ok("Order deleted successfully.");
     }
 }

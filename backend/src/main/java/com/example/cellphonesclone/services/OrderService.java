@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -67,7 +68,12 @@ public class OrderService implements IOrderService{
 
     @Override
     public void deleteOrder(Long id) {
-
+        Order order = orderRepository.findById(id).orElse(null);
+        //no hard-delete => soft delete
+        if(order != null){
+            order.setActive(false);
+            orderRepository.save(order);
+        }
     }
 
     @Override
