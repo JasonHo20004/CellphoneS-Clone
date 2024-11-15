@@ -24,7 +24,7 @@ public class UserService implements IUserService{
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenUtil jwtTokenUtil;
-    private final UserDTO userDTO;
+    //private final UserDTO userDTO;
     private final AuthenticationManager authenticationManager;
     @Override
     //register user
@@ -62,7 +62,7 @@ public class UserService implements IUserService{
         //return optionalUser.get(); //Muon tra JWT token
         User existingUser = optionalUser.get();
         //check password
-        if(userDTO.getFacebookAccountID() == 0 && userDTO.getGoogleAccountID()==0){
+        if(existingUser.getFacebookAccountID() == 0 && existingUser.getGoogleAccountID()==0){
             if(!passwordEncoder.matches(password, existingUser.getPassword())){
                 throw new BadCredentialsException("Wrong phone number or password!");
             }

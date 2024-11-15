@@ -2,6 +2,7 @@ package com.example.cellphonesclone.controllers;
 
 import com.example.cellphonesclone.DTO.UserDTO;
 import com.example.cellphonesclone.DTO.UserLoginDTO;
+import com.example.cellphonesclone.models.User;
 import com.example.cellphonesclone.services.IUserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -35,8 +36,8 @@ public class UserController {
             if(!userDTO.getPassword().equals(userDTO.getRetypePassword())){
                 return ResponseEntity.badRequest().body("Password does not match!");
             }
-            userService.createUser(userDTO);
-            return ResponseEntity.ok("Register successfully!");
+            User user = userService.createUser(userDTO);
+            return ResponseEntity.ok(user);
         }
         catch (Exception e){
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -46,8 +47,12 @@ public class UserController {
     @PostMapping("/login")
     public ResponseEntity<String> login(@Valid @RequestBody UserLoginDTO userLoginDTO){
         //Kiem tra thong tin dang nhap va sinh token
-        String token = userService.login(userLoginDTO.getPhoneNumber(), userLoginDTO.getPassword());
-        //Tra ve token trong response
-        return ResponseEntity.ok(token);
+        try {
+            String token = userService.login(userLoginDTO.getPhoneNumber(), userLoginDTO.getPassword());
+            //Tra ve token trong response
+            return ResponseEntity.ok(token);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 }
