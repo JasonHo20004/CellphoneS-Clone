@@ -1,16 +1,16 @@
-package com.project.cellphonesclone.services;
+package com.example.cellphonesclone.services;
 
-import com.project.cellphonesclone.components.JwtTokenUtils;
-import com.project.cellphonesclone.components.LocalizationUtils;
-import com.project.cellphonesclone.dtos.UpdateUserDTO;
-import com.project.cellphonesclone.dtos.UserDTO;
-import com.project.cellphonesclone.exceptions.DataNotFoundException;
+import com.example.cellphonesclone.components.JwtTokenUtils;
+import com.example.cellphonesclone.components.LocalizationUtils;
+import com.example.cellphonesclone.dtos.UpdateUserDTO;
+import com.example.cellphonesclone.dtos.UserDTO;
+import com.example.cellphonesclone.exceptions.DataNotFoundException;
 
-import com.project.cellphonesclone.exceptions.PermissionDenyException;
-import com.project.cellphonesclone.models.*;
-import com.project.cellphonesclone.repositories.RoleRepository;
-import com.project.cellphonesclone.repositories.UserRepository;
-import com.project.cellphonesclone.utils.MessageKeys;
+import com.example.cellphonesclone.exceptions.PermissionDenyException;
+import com.example.cellphonesclone.models.*;
+import com.example.cellphonesclone.repositories.RoleRepository;
+import com.example.cellphonesclone.repositories.UserRepository;
+import com.example.cellphonesclone.utils.MessageKeys;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.authentication.AuthenticationManager;
