@@ -1,6 +1,7 @@
 package com.example.cellphonesclone.DTO;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,10 +14,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class UserLoginDTO {
     @JsonProperty("phone_number")
-    @NotBlank(message = "Phone number is required!")
+    @NotBlank(message = "Phone number is required")
     private String phoneNumber;
 
-    @JsonProperty("user_password")
-    @NotBlank(message = "Password cannot be blank!")
+    @NotBlank(message = "Password cannot be blank")
     private String password;
+
+    @Min(value = 1, message = "You must enter role's Id")
+    @JsonProperty("role_id")
+    private Long roleId;
 }
