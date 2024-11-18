@@ -1,15 +1,15 @@
 package com.example.cellphonesclone.services;
 
-import com.example.cellphonesclone.components.JwtTokenUtils;
+import com.example.cellphonesclone.components.JwtTokenUtil;
 import com.example.cellphonesclone.components.LocalizationUtils;
-import com.example.cellphonesclone.dtos.UpdateUserDTO;
-import com.example.cellphonesclone.dtos.UserDTO;
+import com.example.cellphonesclone.DTO.UpdateUserDTO;
+import com.example.cellphonesclone.DTO.UserDTO;
 import com.example.cellphonesclone.exceptions.DataNotFoundException;
 
 import com.example.cellphonesclone.exceptions.PermissionDenyException;
 import com.example.cellphonesclone.models.*;
-import com.example.cellphonesclone.repositories.RoleRepository;
-import com.example.cellphonesclone.repositories.UserRepository;
+import com.example.cellphonesclone.respositories.RoleRepository;
+import com.example.cellphonesclone.respositories.UserRepository;
 import com.example.cellphonesclone.utils.MessageKeys;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -29,7 +29,7 @@ public class UserService implements IUserService{
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
-    private final JwtTokenUtils jwtTokenUtil;
+    private final JwtTokenUtil jwtTokenUtil;
     private final AuthenticationManager authenticationManager;
     private final LocalizationUtils localizationUtils;
     @Override
@@ -41,7 +41,7 @@ public class UserService implements IUserService{
         if(userRepository.existsByPhoneNumber(phoneNumber)) {
             throw new DataIntegrityViolationException("Phone number already exists");
         }
-        Role role =roleRepository.findById(userDTO.getRoleId())
+        Role role =roleRepository.findById(userDTO.getRoleID())
                 .orElseThrow(() -> new DataNotFoundException(
                         localizationUtils.getLocalizedMessage(MessageKeys.ROLE_DOES_NOT_EXISTS)));
         if(role.getName().toUpperCase().equals(Role.ADMIN)) {
@@ -52,17 +52,17 @@ public class UserService implements IUserService{
                 .fullName(userDTO.getFullName())
                 .phoneNumber(userDTO.getPhoneNumber())
                 .password(userDTO.getPassword())
-                .address(userDTO.getAddress())
+                .address(userDTO.getUserAddress())
                 .dateOfBirth(userDTO.getDateOfBirth())
-                .facebookAccountId(userDTO.getFacebookAccountId())
-                .googleAccountId(userDTO.getGoogleAccountId())
+                .facebookAccountID(userDTO.getFacebookAccountID())
+                .googleAccountID(userDTO.getGoogleAccountID())
                 .active(true)
                 .build();
 
         newUser.setRole(role);
 
         // Kiểm tra nếu có accountId, không yêu cầu password
-        if (userDTO.getFacebookAccountId() == 0 && userDTO.getGoogleAccountId() == 0) {
+        if (userDTO.getFacebookAccountID() == 0 && userDTO.getGoogleAccountID() == 0) {
             String password = userDTO.getPassword();
             String encodedPassword = passwordEncoder.encode(password);
             newUser.setPassword(encodedPassword);
@@ -83,8 +83,8 @@ public class UserService implements IUserService{
         //return optionalUser.get();//muốn trả JWT token ?
         User existingUser = optionalUser.get();
         //check password
-        if (existingUser.getFacebookAccountId() == 0
-                && existingUser.getGoogleAccountId() == 0) {
+        if (existingUser.getFacebookAccountID() == 0
+                && existingUser.getGoogleAccountID() == 0) {
             if(!passwordEncoder.matches(password, existingUser.getPassword())) {
                 throw new BadCredentialsException(localizationUtils.getLocalizedMessage(MessageKeys.WRONG_PHONE_PASSWORD));
             }
@@ -133,10 +133,10 @@ public class UserService implements IUserService{
             existingUser.setDateOfBirth(updatedUserDTO.getDateOfBirth());
         }
         if (updatedUserDTO.getFacebookAccountId() > 0) {
-            existingUser.setFacebookAccountId(updatedUserDTO.getFacebookAccountId());
+            existingUser.setFacebookAccountID(updatedUserDTO.getFacebookAccountId());
         }
         if (updatedUserDTO.getGoogleAccountId() > 0) {
-            existingUser.setGoogleAccountId(updatedUserDTO.getGoogleAccountId());
+            existingUser.setGoogleAccountID(updatedUserDTO.getGoogleAccountId());
         }
 
         // Update the password if it is provided in the DTO

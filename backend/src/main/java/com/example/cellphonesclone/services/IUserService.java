@@ -1,7 +1,7 @@
 package com.example.cellphonesclone.services;
 
-import com.example.cellphonesclone.dtos.UpdateUserDTO;
-import com.example.cellphonesclone.dtos.UserDTO;
+import com.example.cellphonesclone.DTO.UpdateUserDTO;
+import com.example.cellphonesclone.DTO.UserDTO;
 import com.example.cellphonesclone.exceptions.DataNotFoundException;
 import com.example.cellphonesclone.models.User;
 
