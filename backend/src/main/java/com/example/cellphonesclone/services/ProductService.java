@@ -11,11 +11,13 @@ import com.example.cellphonesclone.responses.ProductResponse;
 import com.example.cellphonesclone.respositories.BrandRespository;
 import com.example.cellphonesclone.respositories.ProductImageRepository;
 import com.example.cellphonesclone.respositories.ProductRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -26,6 +28,7 @@ public class ProductService implements IProductService{
     private final ProductImageRepository productImageRepository;
 
     @Override
+    @Transactional
     public Product createProduct(ProductDTO productDTO) throws DataNotFoundException {
         Brand existingBrand = brandRespository.findById(productDTO.getBrandId())
                 .orElseThrow(()-> new DataNotFoundException("Cannot find Brand with ID: "+productDTO.getBrandId()));
@@ -52,8 +55,16 @@ public class ProductService implements IProductService{
 
     @Override
     public Product getProductByID(long productID) throws Exception {
-        return productRepository.findById(productID)
-                .orElseThrow(()->new DataNotFoundException("Cannot find product with ID: "+productID));
+        Optional<Product> optionalProduct = productRepository.getDetailProduct(productID);
+        if(optionalProduct.isPresent()) {
+            return optionalProduct.get();
+        }
+        throw new DataNotFoundException("Cannot find product with id =" + productID);
+    }
+
+    @Override
+    public List<Product> findProductsByIds(List<Long> productIds) {
+        return productRepository.findProductsByIds(productIds);
     }
 
     @Override
@@ -63,6 +74,7 @@ public class ProductService implements IProductService{
     }
 
     @Override
+    @Transactional
     public Product updateProduct(long id, ProductDTO productDTO) throws Exception {
         Product existingProduct = getProductByID(id);
         if(existingProduct != null){
@@ -101,6 +113,7 @@ public class ProductService implements IProductService{
     }
 
     @Override
+    @Transactional
     public ProductImage createProductImage(Long productID, ProductImageDTO productImageDTO)
             throws Exception {
         Product existingProduct = productRepository.findById(productID)

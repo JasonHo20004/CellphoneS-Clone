@@ -2,10 +2,13 @@ package com.example.cellphonesclone.responses;
 
 
 import com.example.cellphonesclone.models.Product;
+import com.example.cellphonesclone.models.ProductImage;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 @Setter
 @Getter
@@ -49,6 +52,9 @@ public class ProductResponse extends BaseResponse{
 
     @JsonProperty("in_stock")
     private Integer inStock;
+
+    @JsonProperty("product_images")
+    private List<ProductImage> productImages = new ArrayList<>();
 
     @JsonProperty("brand_id")
     private Long brandId;

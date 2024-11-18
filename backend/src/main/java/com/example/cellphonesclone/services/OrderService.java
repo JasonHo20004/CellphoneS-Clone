@@ -1,76 +1,122 @@
 package com.example.cellphonesclone.services;
 
+import com.example.cellphonesclone.DTO.CartItemDTO;
 import com.example.cellphonesclone.DTO.OrderDTO;
 import com.example.cellphonesclone.exceptions.DataNotFoundException;
-import com.example.cellphonesclone.models.Order;
-import com.example.cellphonesclone.models.OrderStatus;
-import com.example.cellphonesclone.models.User;
+import com.example.cellphonesclone.models.*;
+import com.example.cellphonesclone.respositories.OrderDetailRepository;
 import com.example.cellphonesclone.respositories.OrderRepository;
+import com.example.cellphonesclone.respositories.ProductRepository;
 import com.example.cellphonesclone.respositories.UserRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class OrderService implements IOrderService{
     private final UserRepository userRepository;
     private final OrderRepository orderRepository;
+    private final ProductRepository productRepository;
+    private final OrderDetailRepository orderDetailRepository;
+
     private final ModelMapper modelMapper;
 
     @Override
+    @Transactional
     public Order createOrder(OrderDTO orderDTO) throws DataNotFoundException {
-        //kiem tra userId co ton tai ko
-        User user = userRepository.findById(orderDTO.getUserID())
-                .orElseThrow(()->new DataNotFoundException("Cannot find user with id: "+ orderDTO.getUserID()));
+        //tìm xem user'id có tồn tại ko
+        User user = userRepository
+                .findById(orderDTO.getUserID())
+                .orElseThrow(() -> new DataNotFoundException("Cannot find user with id: "+orderDTO.getUserID()));
+        //convert orderDTO => Order
+        //dùng thư viện Model Mapper
+        // Tạo một luồng bảng ánh xạ riêng để kiểm soát việc ánh xạ
         modelMapper.typeMap(OrderDTO.class, Order.class)
-                .addMappings(mapper->mapper.skip(Order::setId));
+                .addMappings(mapper -> mapper.skip(Order::setId));
+        // Cập nhật các trường của đơn hàng từ orderDTO
         Order order = new Order();
         modelMapper.map(orderDTO, order);
         order.setUser(user);
-        order.setOrderDate(new Date()); //thoi diem hien tai
-        order.setStatus(OrderStatus.PENDING); //mac dinh pending
-
-        LocalDate shippingDate = orderDTO.getShippingDate() == null ? LocalDate.now(): orderDTO.getShippingDate();
-        if(shippingDate.isBefore(LocalDate.now())){
-            throw new DataNotFoundException("Date must be at least today");
+        order.setOrderDate(LocalDate.now());//lấy thời điểm hiện tại
+        order.setStatus(OrderStatus.PENDING);
+        //Kiểm tra shipping date phải >= ngày hôm nay
+        LocalDate shippingDate = orderDTO.getShippingDate() == null
+                ? LocalDate.now() : orderDTO.getShippingDate();
+        if (shippingDate.isBefore(LocalDate.now())) {
+            throw new DataNotFoundException("Date must be at least today !");
         }
         order.setShippingDate(shippingDate);
-        order.setActive(true);
+        order.setActive(true);//đoạn này nên set sẵn trong sql
+        order.setTotalMoney(orderDTO.getTotalMoney());
         orderRepository.save(order);
+        // Tạo danh sách các đối tượng OrderDetail từ cartItems
+        List<OrderDetail> orderDetails = new ArrayList<>();
+        for (CartItemDTO cartItemDTO : orderDTO.getCartItems()) {
+            // Tạo một đối tượng OrderDetail từ CartItemDTO
+            OrderDetail orderDetail = new OrderDetail();
+            orderDetail.setOrder(order);
+
+            // Lấy thông tin sản phẩm từ cartItemDTO
+            Long productId = cartItemDTO.getProductId();
+            int quantity = cartItemDTO.getQuantity();
+
+            // Tìm thông tin sản phẩm từ cơ sở dữ liệu (hoặc sử dụng cache nếu cần)
+            Product product = productRepository.findById(productId)
+                    .orElseThrow(() -> new DataNotFoundException("Product not found with id: " + productId));
+
+            // Đặt thông tin cho OrderDetail
+            orderDetail.setProduct(product);
+            orderDetail.setNumberOfProducts(quantity);
+            // Các trường khác của OrderDetail nếu cần
+            orderDetail.setPrice(product.getPrice());
+
+            // Thêm OrderDetail vào danh sách
+            orderDetails.add(orderDetail);
+        }
+
+
+        // Lưu danh sách OrderDetail vào cơ sở dữ liệu
+        orderDetailRepository.saveAll(orderDetails);
         return order;
     }
 
     @Override
     public Order getOrder(Long id) {
-        return orderRepository.findById(id).orElse(null);
+        Order selectedOrder = orderRepository.findById(id).orElse(null);
+        return selectedOrder;
     }
 
     @Override
-    public Order updateOrder(Long id, OrderDTO orderDTO) throws DataNotFoundException {
-        Order order = orderRepository.findById(id).orElseThrow(()->
-                new DataNotFoundException("Cannot find order with id = "+id));
-        User existingUser = userRepository.findById(orderDTO.getUserID()).orElseThrow(()->
-                new DataNotFoundException("Cannot find order with id = "+id));
-        //Tao luong anh xa rieng de kiem soat viec anh xa
+    @Transactional
+    public Order updateOrder(Long id, OrderDTO orderDTO)
+            throws DataNotFoundException {
+        Order order = orderRepository.findById(id).orElseThrow(() ->
+                new DataNotFoundException("Cannot find order with id: " + id));
+        User existingUser = userRepository.findById(
+                orderDTO.getUserID()).orElseThrow(() ->
+                new DataNotFoundException("Cannot find user with id: " + id));
+        // Tạo một luồng bảng ánh xạ riêng để kiểm soát việc ánh xạ
         modelMapper.typeMap(OrderDTO.class, Order.class)
-                .addMappings(mapper->mapper.skip(Order::setId));
-        //Cap nhat cac truong cua don hang tu OrderDTO
+                .addMappings(mapper -> mapper.skip(Order::setId));
+        // Cập nhật các trường của đơn hàng từ orderDTO
         modelMapper.map(orderDTO, order);
         order.setUser(existingUser);
         return orderRepository.save(order);
     }
 
     @Override
+    @Transactional
     public void deleteOrder(Long id) {
         Order order = orderRepository.findById(id).orElse(null);
-        //no hard-delete => soft delete
-        if(order != null){
+        //no hard-delete, => please soft-delete
+        if(order != null) {
             order.setActive(false);
             orderRepository.save(order);
         }

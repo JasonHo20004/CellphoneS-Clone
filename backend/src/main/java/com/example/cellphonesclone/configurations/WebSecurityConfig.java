@@ -49,19 +49,19 @@ public class WebSecurityConfig {
                                     String.format("%s/roles**", apiPrefix)).permitAll()
 
                             .requestMatchers(GET,
-                                    String.format("%s/categories**", apiPrefix)).permitAll()
+                                    String.format("%s/brands**", apiPrefix)).permitAll()
 
                             .requestMatchers(GET,
-                                    String.format("%s/categories/**", apiPrefix)).permitAll()
+                                    String.format("%s/brands/**", apiPrefix)).permitAll()
 
                             .requestMatchers(POST,
-                                    String.format("%s/categories/**", apiPrefix)).hasAnyRole(Role.ADMIN)
+                                    String.format("%s/brands/**", apiPrefix)).hasAnyRole(Role.ADMIN)
 
                             .requestMatchers(PUT,
-                                    String.format("%s/categories/**", apiPrefix)).hasAnyRole(Role.ADMIN)
+                                    String.format("%s/brands/**", apiPrefix)).hasAnyRole(Role.ADMIN)
 
                             .requestMatchers(DELETE,
-                                    String.format("%s/categories/**", apiPrefix)).hasAnyRole(Role.ADMIN)
+                                    String.format("%s/brands/**", apiPrefix)).hasAnyRole(Role.ADMIN)
 
                             .requestMatchers(GET,
                                     String.format("%s/products**", apiPrefix)).permitAll()
