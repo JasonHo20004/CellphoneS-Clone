@@ -1,13 +1,10 @@
 package com.example.cellphonesclone.services;
 
-import com.example.cellphonesclone.dtos.CategoryDTO;
-import com.example.cellphonesclone.models.Category;
+
 import com.example.cellphonesclone.models.Role;
-import com.example.cellphonesclone.repositories.CategoryRepository;
-import com.example.cellphonesclone.repositories.RoleRepository;
+import com.example.cellphonesclone.respositories.RoleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
