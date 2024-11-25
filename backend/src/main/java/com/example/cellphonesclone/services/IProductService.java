@@ -14,10 +14,7 @@ public interface IProductService {
     Product createProduct(ProductDTO productDTO) throws Exception;
     Product getProductByID(long id) throws Exception;
     Page<ProductResponse> getAllProduct(String keyword,
-                                        Long categoryId, PageRequest pageRequest);
-
-    Page<ProductResponse> getAllProduct(PageRequest pageRequest);
-
+                                        Long brandId, PageRequest pageRequest);
     Product updateProduct(long id, ProductDTO productDTO) throws Exception;
     void deleteProduct(long id);
     boolean existsByName(String name);

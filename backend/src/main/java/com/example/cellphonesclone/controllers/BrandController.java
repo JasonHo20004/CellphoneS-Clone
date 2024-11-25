@@ -19,7 +19,7 @@ import org.springframework.web.servlet.LocaleResolver;
 import java.util.List;
 
 @RestController
-@RequestMapping("${api.prefix}/categories")
+@RequestMapping("${api.prefix}/brands")
 //@Validated
 //Dependency Injection
 @RequiredArgsConstructor
@@ -50,26 +50,26 @@ public class BrandController {
     }
 
     @GetMapping("")
-    public ResponseEntity<List<Brand>> getAllCategories(
+    public ResponseEntity<List<Brand>> getAllBrands(
             @RequestParam("page")     int page,
             @RequestParam("limit")    int limit
     ) {
-        List<Brand> categories = brandService.getAllBrands();
-        return ResponseEntity.ok(categories);
+        List<Brand> brands = brandService.getAllBrands();
+        return ResponseEntity.ok(brands);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<UpdateBrandResponse> updateCategory(
+    public ResponseEntity<UpdateBrandResponse> updateBrand(
             @PathVariable Long id,
             @Valid @RequestBody BrandDTO brandDTO
     ) {
-        UpdateBrandResponse updateCategoryResponse = new UpdateBrandResponse();
+        UpdateBrandResponse updateBrandResponse = new UpdateBrandResponse();
         brandService.updateBrand(id, brandDTO);
-        updateCategoryResponse.setMessage(localizationUtils.getLocalizedMessage(MessageKeys.UPDATE_BRAND_SUCCESSFULLY));
-        return ResponseEntity.ok(updateCategoryResponse);
+        updateBrandResponse.setMessage(localizationUtils.getLocalizedMessage(MessageKeys.UPDATE_BRAND_SUCCESSFULLY));
+        return ResponseEntity.ok(updateBrandResponse);
     }
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteCategory(@PathVariable Long id) {
+    public ResponseEntity<String> deleteBrand(@PathVariable Long id) {
         brandService.deleteBrand(id);
         return ResponseEntity.ok(localizationUtils.getLocalizedMessage(MessageKeys.DELETE_BRAND_SUCCESSFULLY));
     }

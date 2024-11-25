@@ -160,7 +160,7 @@ public class ProductController {
     @GetMapping("")
     public ResponseEntity<ProductListResponse> getProducts(
             @RequestParam(defaultValue = "") String keyword,
-            @RequestParam(defaultValue = "0", name = "category_id") Long categoryId,
+            @RequestParam(defaultValue = "0", name = "brand_id") Long brandId,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int limit
     ) {
@@ -170,7 +170,7 @@ public class ProductController {
                 //Sort.by("createdAt").descending()
                 Sort.by("id").ascending()
         );
-        Page<ProductResponse> productPage = productService.getAllProduct(keyword, categoryId, pageRequest);
+        Page<ProductResponse> productPage = productService.getAllProduct(keyword, brandId, pageRequest);
         // Lấy tổng số trang
         int totalPages = productPage.getTotalPages();
         List<ProductResponse> products = productPage.getContent();
