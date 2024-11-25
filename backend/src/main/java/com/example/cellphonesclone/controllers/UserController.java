@@ -1,6 +1,6 @@
 package com.example.cellphonesclone.controllers;
 
-import com.example.cellphonesclone.models.Role;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import com.example.cellphonesclone.models.User;
 import com.example.cellphonesclone.responses.LoginResponse;
 import com.example.cellphonesclone.responses.RegisterResponse;
@@ -22,12 +22,12 @@ import java.util.List;
 @RestController
 @RequestMapping("${api.prefix}/users")
 @RequiredArgsConstructor
+@CrossOrigin(origins = "http://localhost:4200") // Allow requests from http://localhost:4200
 public class UserController {
     private final IUserService userService;
     private final LocalizationUtils localizationUtils;
 
     @PostMapping("/register")
-    //can we register an "admin" user ?
     public ResponseEntity<RegisterResponse> createUser(
             @Valid @RequestBody UserDTO userDTO,
             BindingResult result
