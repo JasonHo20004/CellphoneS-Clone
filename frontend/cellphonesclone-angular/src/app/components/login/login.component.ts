@@ -2,9 +2,9 @@ import { Component, ViewChild } from '@angular/core';
 import { FooterComponent } from '../footer/footer.component';
 import { NgForm, FormsModule } from '@angular/forms';
 import { HeaderComponent } from '../header/header.component';
-import { LoginDTO } from '../dtos/user/login.dto';
+import { LoginDTO } from '../../dtos/user/login.dto';
 import { Router } from '@angular/router';
-import { UserService } from '../services/user.service';
+import { UserService } from '../../services/user.service';
 import { HttpClientModule } from '@angular/common/http';
 
 @Component({
@@ -34,8 +34,8 @@ export class LoginComponent {
 
   //   const loginDTO: LoginDTO = {
       
-  //     phone_number: this.phoneNumber,
-  //     password: this.password,
+  //     "phone_number": this.phoneNumber,
+  //     "password": this.password,
   //   };
   //   this.userService.login(loginDTO).subscribe({
   //     next: (response: any) => {
@@ -61,7 +61,8 @@ export class LoginComponent {
     console.log('Attempting to login with DTO:', loginDTO);
   
     this.userService.login(loginDTO).subscribe({
-      next: (response: any) => {
+      next: (response: LoginResponse) => {
+        const {token} = response.token
         console.log('Login response:', response);
         if (response && (response.status === 200 || response.status === 201)) {
           // Navigation or further actions

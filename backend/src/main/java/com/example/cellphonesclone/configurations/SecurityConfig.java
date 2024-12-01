@@ -1,6 +1,7 @@
 package com.example.cellphonesclone.configurations;
 
 import com.example.cellphonesclone.respositories.UserRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -15,14 +16,15 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 @EnableWebSecurity
 @Configuration
+@RequiredArgsConstructor
 public class SecurityConfig {
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
     //user's detail object
     @Bean
     public UserDetailsService userDetailsService(){
         return phoneNumber -> userRepository
                 .findByPhoneNumber(phoneNumber)
-                .orElseThrow(()-> new UsernameNotFoundException("Cannot find user with phoneNumber = "+phoneNumber));
+                .orElseThrow(()-> new UsernameNotFoundException("Cannot find user with phoneNumber = "+ phoneNumber));
 
     }
 
