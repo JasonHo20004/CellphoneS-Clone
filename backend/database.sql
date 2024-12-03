@@ -1,11 +1,17 @@
 -- Create table for brands
-CREATE TABLE cellphonesclone_brands (
+CREATE TABLE brands (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(100) NOT NULL
 );
 
+-- Create table for roles
+CREATE TABLE roles (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(20) NOT NULL
+);
+
 -- Create table for products
-CREATE TABLE cellphonesclone_products (
+CREATE TABLE products (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(300) NOT NULL,
     price FLOAT NOT NULL,
@@ -24,19 +30,11 @@ CREATE TABLE cellphonesclone_products (
     main_camera VARCHAR(350),
     color VARCHAR(255),
     release_date INT,
-    FOREIGN KEY (brands_id) REFERENCES cellphonesclone_brands(id)
-);
-
--- Create table for product images
-CREATE TABLE cellphonesclone_product_images (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    product_id INT,
-    image_url VARCHAR(300),
-    FOREIGN KEY (product_id) REFERENCES cellphonesclone_products(id)
+    FOREIGN KEY (brands_id) REFERENCES brands(id)
 );
 
 -- Create table for users
-CREATE TABLE cellphonesclone_users (
+CREATE TABLE users (
     id INT AUTO_INCREMENT PRIMARY KEY,
     fullname VARCHAR(100) NOT NULL,
     phone_number VARCHAR(10),
@@ -49,17 +47,11 @@ CREATE TABLE cellphonesclone_users (
     facebook_account_id INT,
     google_account_id INT,
     role_id INT,
-    FOREIGN KEY (role_id) REFERENCES cellphonesclone_roles(id)
-);
-
--- Create table for roles
-CREATE TABLE cellphonesclone_roles (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(20) NOT NULL
+    FOREIGN KEY (role_id) REFERENCES roles(id)
 );
 
 -- Create table for social accounts
-CREATE TABLE cellphonesclone_social_account (
+CREATE TABLE social_account (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     provider VARCHAR(20),
     providerid VARCHAR(50),
@@ -67,11 +59,11 @@ CREATE TABLE cellphonesclone_social_account (
     name VARCHAR(100),
     user_id INT,
     provider_id VARCHAR(50),
-    FOREIGN KEY (user_id) REFERENCES cellphonesclone_users(id)
+    FOREIGN KEY (user_id) REFERENCES users(id)
 );
 
 -- Create table for orders
-CREATE TABLE cellphonesclone_orders (
+CREATE TABLE orders (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT,
     fullname VARCHAR(100),
@@ -88,11 +80,19 @@ CREATE TABLE cellphonesclone_orders (
     tracking_number VARCHAR(100),
     payment_method VARCHAR(100),
     active TINYINT(1),
-    FOREIGN KEY (user_id) REFERENCES cellphonesclone_users(id)
+    FOREIGN KEY (user_id) REFERENCES users(id)
+);
+
+-- Create table for product images
+CREATE TABLE product_images (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    product_id INT,
+    image_url VARCHAR(300),
+    FOREIGN KEY (product_id) REFERENCES products(id)
 );
 
 -- Create table for order details
-CREATE TABLE cellphonesclone_order_details (
+CREATE TABLE order_details (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     order_id INT,
     product_id INT,
@@ -100,12 +100,12 @@ CREATE TABLE cellphonesclone_order_details (
     number_of_products INT,
     total_money FLOAT,
     color VARCHAR(20),
-    FOREIGN KEY (order_id) REFERENCES cellphonesclone_orders(id),
-    FOREIGN KEY (product_id) REFERENCES cellphonesclone_products(id)
+    FOREIGN KEY (order_id) REFERENCES orders(id),
+    FOREIGN KEY (product_id) REFERENCES products(id)
 );
 
 -- Create table for reviews
-CREATE TABLE cellphonesclone_reviews (
+CREATE TABLE reviews (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     user_id INT,
     product_id INT,
@@ -113,12 +113,12 @@ CREATE TABLE cellphonesclone_reviews (
     comment LONGTEXT,
     created_at DATETIME,
     updated_at DATETIME,
-    FOREIGN KEY (user_id) REFERENCES cellphonesclone_users(id),
-    FOREIGN KEY (product_id) REFERENCES cellphonesclone_products(id)
+    FOREIGN KEY (user_id) REFERENCES users(id),
+    FOREIGN KEY (product_id) REFERENCES products(id)
 );
 
 -- Create table for tokens
-CREATE TABLE cellphonesclone_tokens (
+CREATE TABLE tokens (
     token_id INT AUTO_INCREMENT PRIMARY KEY,
     token_value VARCHAR(255),
     token_type VARCHAR(50),
@@ -126,5 +126,5 @@ CREATE TABLE cellphonesclone_tokens (
     revoked TINYINT(1),
     expired TINYINT(1),
     user_id INT,
-    FOREIGN KEY (user_id) REFERENCES cellphonesclone_users(id)
+    FOREIGN KEY (user_id) REFERENCES users(id)
 );
