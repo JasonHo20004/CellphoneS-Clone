@@ -27,103 +27,126 @@ import static org.springframework.http.HttpMethod.*;
 @EnableWebSecurity
 @EnableWebMvc
 @RequiredArgsConstructor
+//public class WebSecurityConfig {
+//    private final JwtTokenFilter jwtTokenFilter;
+//    @Value("${api.prefix}")
+//    private String apiPrefix;
+//    @Bean
+//    //Pair.of(String.format("%s/products", apiPrefix), "GET"),
+//    public SecurityFilterChain securityFilterChain(HttpSecurity http)  throws Exception{
+//        http
+//                .addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class)
+//                .authorizeHttpRequests(requests -> {
+//                    requests
+//                            .requestMatchers(
+//                                    String.format("%s/users/register", apiPrefix),
+//                                    String.format("%s/users/login", apiPrefix)
+//                            )
+//                            .permitAll()
+//
+//                            .requestMatchers(GET,
+//                                    String.format("%s/roles**", apiPrefix)).permitAll()
+//
+//                            .requestMatchers(GET,
+//                                    String.format("%s/brands**", apiPrefix)).permitAll()
+//
+//                            .requestMatchers(GET,
+//                                    String.format("%s/brands/**", apiPrefix)).permitAll()
+//
+//                            .requestMatchers(POST,
+//                                    String.format("%s/brands/**", apiPrefix)).permitAll()
+//
+//                            .requestMatchers(PUT,
+//                                    String.format("%s/brands/**", apiPrefix)).permitAll()
+//
+//                            .requestMatchers(DELETE,
+//                                    String.format("%s/brands/**", apiPrefix)).permitAll()
+//
+//                            .requestMatchers(GET,
+//                                    String.format("%s/products**", apiPrefix)).permitAll()
+//
+//                            .requestMatchers(GET,
+//                                    String.format("%s/products/**", apiPrefix)).permitAll()
+//
+//                            .requestMatchers(GET,
+//                                    String.format("%s/products/images/*", apiPrefix)).permitAll()
+//
+//                            .requestMatchers(POST,
+//                                    String.format("%s/products**", apiPrefix)).permitAll()
+//
+//                            .requestMatchers(PUT,
+//                                    String.format("%s/products/**", apiPrefix)).permitAll()
+//
+//                            .requestMatchers(DELETE,
+//                                    String.format("%s/products/**", apiPrefix)).permitAll()
+//
+//
+//                            .requestMatchers(POST,
+//                                    String.format("%s/orders/**", apiPrefix)).hasAnyRole(Role.USER)
+//
+//                            .requestMatchers(GET,
+//                                    String.format("%s/orders/**", apiPrefix)).permitAll()
+//
+//                            .requestMatchers(PUT,
+//                                    String.format("%s/orders/**", apiPrefix)).permitAll()
+//
+//                            .requestMatchers(DELETE,
+//                                    String.format("%s/orders/**", apiPrefix)).permitAll()
+//
+//                            .requestMatchers(POST,
+//                                    String.format("%s/order_details/**", apiPrefix)).hasAnyRole(Role.USER)
+//
+//                            .requestMatchers(GET,
+//                                    String.format("%s/order_details/**", apiPrefix)).permitAll()
+//
+//                            .requestMatchers(PUT,
+//                                    String.format("%s/order_details/**", apiPrefix)).permitAll()
+//
+//                            .requestMatchers(DELETE,
+//                                    String.format("%s/order_details/**", apiPrefix)).permitAll()
+//
+//
+//                            .anyRequest().authenticated();
+//                    //.anyRequest().permitAll();
+//
+//                })
+//                .csrf(AbstractHttpConfigurer::disable);
+//        http.cors(new Customizer<CorsConfigurer<HttpSecurity>>() {
+//            @Override
+//            public void customize(CorsConfigurer<HttpSecurity> httpSecurityCorsConfigurer) {
+//                CorsConfiguration configuration = new CorsConfiguration();
+//                configuration.setAllowedOrigins(List.of("*"));
+//                //configuration.setAllowedOrigins(List.of("http://localhost:4200"));
+//                configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
+//                configuration.setAllowedHeaders(Arrays.asList("authorization", "content-type", "x-auth-token"));
+//                configuration.setExposedHeaders(List.of("x-auth-token"));
+//                UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+//                source.registerCorsConfiguration("/**", configuration);
+//                httpSecurityCorsConfigurer.configurationSource(source);
+//            }
+//        });
+//
+//        return http.build();
+//    }
+//}
 public class WebSecurityConfig {
-    private final JwtTokenFilter jwtTokenFilter;
-    @Value("${api.prefix}")
-    private String apiPrefix;
     @Bean
-    //Pair.of(String.format("%s/products", apiPrefix), "GET"),
-    public SecurityFilterChain securityFilterChain(HttpSecurity http)  throws Exception{
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class)
-                .authorizeHttpRequests(requests -> {
-                    requests
-                            .requestMatchers(
-                                    String.format("%s/users/register", apiPrefix),
-                                    String.format("%s/users/login", apiPrefix)
-                            )
-                            .permitAll()
+                .csrf(AbstractHttpConfigurer::disable)
+                .cors(cors -> {
+                    CorsConfiguration configuration = new CorsConfiguration();
+                    configuration.setAllowedOrigins(List.of("*"));
+                    configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
+                    configuration.setAllowedHeaders(Arrays.asList("authorization", "content-type", "x-auth-token"));
 
-                            .requestMatchers(GET,
-                                    String.format("%s/roles**", apiPrefix)).permitAll()
-
-                            .requestMatchers(GET,
-                                    String.format("%s/brands**", apiPrefix)).permitAll()
-
-                            .requestMatchers(GET,
-                                    String.format("%s/brands/**", apiPrefix)).permitAll()
-
-                            .requestMatchers(POST,
-                                    String.format("%s/brands/**", apiPrefix)).hasAnyRole(Role.ADMIN)
-
-                            .requestMatchers(PUT,
-                                    String.format("%s/brands/**", apiPrefix)).hasAnyRole(Role.ADMIN)
-
-                            .requestMatchers(DELETE,
-                                    String.format("%s/brands/**", apiPrefix)).hasAnyRole(Role.ADMIN)
-
-                            .requestMatchers(GET,
-                                    String.format("%s/products**", apiPrefix)).permitAll()
-
-                            .requestMatchers(GET,
-                                    String.format("%s/products/**", apiPrefix)).permitAll()
-
-                            .requestMatchers(GET,
-                                    String.format("%s/products/images/*", apiPrefix)).permitAll()
-
-                            .requestMatchers(POST,
-                                    String.format("%s/products**", apiPrefix)).hasAnyRole(Role.ADMIN)
-
-                            .requestMatchers(PUT,
-                                    String.format("%s/products/**", apiPrefix)).hasAnyRole(Role.ADMIN)
-
-                            .requestMatchers(DELETE,
-                                    String.format("%s/products/**", apiPrefix)).hasAnyRole(Role.ADMIN)
-
-
-                            .requestMatchers(POST,
-                                    String.format("%s/orders/**", apiPrefix)).hasAnyRole(Role.USER)
-
-                            .requestMatchers(GET,
-                                    String.format("%s/orders/**", apiPrefix)).permitAll()
-
-                            .requestMatchers(PUT,
-                                    String.format("%s/orders/**", apiPrefix)).hasRole(Role.ADMIN)
-
-                            .requestMatchers(DELETE,
-                                    String.format("%s/orders/**", apiPrefix)).hasRole(Role.ADMIN)
-
-                            .requestMatchers(POST,
-                                    String.format("%s/order_details/**", apiPrefix)).hasAnyRole(Role.USER)
-
-                            .requestMatchers(GET,
-                                    String.format("%s/order_details/**", apiPrefix)).permitAll()
-
-                            .requestMatchers(PUT,
-                                    String.format("%s/order_details/**", apiPrefix)).hasRole(Role.ADMIN)
-
-                            .requestMatchers(DELETE,
-                                    String.format("%s/order_details/**", apiPrefix)).hasRole(Role.ADMIN)
-
-
-                            .anyRequest().authenticated();
-                    //.anyRequest().permitAll();
-
+                    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+                    source.registerCorsConfiguration("/**", configuration);
+                    cors.configurationSource(source);
                 })
-                .csrf(AbstractHttpConfigurer::disable);
-        http.cors(new Customizer<CorsConfigurer<HttpSecurity>>() {
-            @Override
-            public void customize(CorsConfigurer<HttpSecurity> httpSecurityCorsConfigurer) {
-                CorsConfiguration configuration = new CorsConfiguration();
-                configuration.setAllowedOrigins(List.of("http://localhost:4200"));
-                configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
-                configuration.setAllowedHeaders(Arrays.asList("authorization", "content-type", "x-auth-token"));
-                configuration.setExposedHeaders(List.of("x-auth-token"));
-                UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-                source.registerCorsConfiguration("/**", configuration);
-                httpSecurityCorsConfigurer.configurationSource(source);
-            }
-        });
+                .authorizeHttpRequests(requests -> {
+                    requests.anyRequest().permitAll();
+                });
 
         return http.build();
     }
