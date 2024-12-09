@@ -76,6 +76,7 @@ public class ProductResponse extends BaseResponse{
                 .screenSize(product.getScreenSize())
                 .inStock(product.getInStock())
                 .releaseDate(product.getReleaseDate())
+                .productImages(product.getProductImages())
                 .build();
         productResponse.setCreatedAt(product.getCreatedAt());
         productResponse.setUpdatedAt(product.getUpdatedAt());

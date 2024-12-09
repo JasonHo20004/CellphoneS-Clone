@@ -55,11 +55,7 @@ public class ProductService implements IProductService{
 
     @Override
     public Product getProductByID(long productID) throws Exception {
-        Optional<Product> optionalProduct = productRepository.getDetailProduct(productID);
-        if(optionalProduct.isPresent()) {
-            return optionalProduct.get();
-        }
-        throw new DataNotFoundException("Cannot find product with id =" + productID);
+        return productRepository.getDetailProduct(productID).stream().findFirst().orElseThrow(() -> new DataNotFoundException("Cannot find product with id =" + productID));
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.example.cellphonesclone.models;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -66,6 +67,13 @@ public class Product extends BaseEntity{
     @JoinColumn(name = "brands_id")
     private Brand brand;
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonManagedReference
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<ProductImage> productImages;
+
+    public ProductImage getThumbnail() {
+        return productImages != null && !productImages.isEmpty()
+                ? productImages.get(0)
+                : null;
+    }
 }

@@ -73,7 +73,7 @@ public class ProductController {
     //POST http://localhost:8088/v1/api/products
     public ResponseEntity<?> uploadImages(
             @PathVariable("id") Long productId,
-            @ModelAttribute("files") List<MultipartFile> files
+            @RequestParam("files") List<MultipartFile> files
     ){
         try {
             Product existingProduct = productService.getProductByID(productId);
