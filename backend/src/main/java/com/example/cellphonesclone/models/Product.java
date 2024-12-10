@@ -5,7 +5,6 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -71,9 +70,10 @@ public class Product extends BaseEntity{
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<ProductImage> productImages;
 
-    public ProductImage getThumbnail() {
+    public String getThumbnail() {
         return productImages != null && !productImages.isEmpty()
-                ? productImages.get(0)
+                ? productImages.get(0).getImageUrl() // Access imageUrl directly
                 : null;
     }
+
 }

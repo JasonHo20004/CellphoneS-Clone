@@ -1,5 +1,6 @@
 package com.example.cellphonesclone.DTO;
 
+import com.example.cellphonesclone.models.ProductImage;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -8,6 +9,7 @@ import jakarta.validation.constraints.Size;
 import lombok.*;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 
 @Data
@@ -59,5 +61,11 @@ public class ProductDTO {
 
     @JsonProperty("brand_id")
     private Long brandId;
+
+    public void setThumbnailFromFirstImage(List<ProductImage> images) {
+        if (images != null && !images.isEmpty()) {
+            this.thumbnail = images.get(0).getImageUrl();
+        }
+    }
 }
 
