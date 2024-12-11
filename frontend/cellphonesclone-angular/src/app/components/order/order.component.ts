@@ -21,21 +21,16 @@ import { ProductService } from '../../services/product.service';
   styleUrl: './order.component.scss'
 })
 export class OrderComponent{
-  // private formBuilder = inject(FormBuilder);  
-
-  // orderForm: FormGroup; // Đối tượng FormGroup để quản lý dữ liệu của form
+  orderForm: FormGroup; // Đối tượng FormGroup để quản lý dữ liệu của form
   cartItems: { product: Product, quantity: number }[] = [];
+  couponCode: string = ''; // Mã giảm giá
   totalAmount: number = 0; // Tổng tiền
-  couponDiscount: number = 0; //số tiền được discount từ coupon
-  couponApplied: boolean = false;
-  cart: Map<number, number> = new Map();
   orderData: OrderDTO = {
-    user_id: 0, // Thay bằng user_id thích hợp
+    user_id: 17, // Thay bằng user_id thích hợp
     fullname: '', // Khởi tạo rỗng, sẽ được điền từ form
-    email: '', // Khởi tạo rỗng, sẽ được điền từ form    
+    email: '', // Khởi tạo rỗng, sẽ được điền từ form
     phone_number: '', // Khởi tạo rỗng, sẽ được điền từ form
     address: '', // Khởi tạo rỗng, sẽ được điền từ form
-    status: 'pending',
     note: '', // Có thể thêm trường ghi chú nếu cần
     total_money: 0, // Sẽ được tính toán dựa trên giỏ hàng và mã giảm giá
     payment_method: 'cod', // Mặc định là thanh toán khi nhận hàng (COD)
@@ -47,8 +42,19 @@ export class OrderComponent{
   constructor(
     private cartService: CartService,
     private productService: ProductService,
-    private orderService: OrderService
-  ) {}
+    private orderService: OrderService,
+    private fb: FormBuilder
+  ) {
+    this.orderForm = this.fb.group({
+      fullname: ['Ho Thanh X', Validators.required], // fullname là FormControl bắt buộc      
+      email: ['john123@gmail.com', [Validators.email]], // Sử dụng Validators.email cho kiểm tra định dạng email
+      phone_number: ['1122334455', [Validators.required, Validators.minLength(6)]], // phone_number bắt buộc và ít nhất 6 ký tự
+      address: ['White House', [Validators.required, Validators.minLength(5)]], // address bắt buộc và ít nhất 5 ký tự
+      note: ['coincard'],
+      shipping_method: ['express'],
+      payment_method: ['cod']
+    });
+  }
 
   // constructor(private cartService: CartService, private orderService: OrderService) {
   //   // super();
@@ -76,10 +82,10 @@ export class OrderComponent{
     const productIds = Array.from(cart.keys());    
     console.log('Product IDs in cart:', productIds);
   
-    if(productIds.length === 0) {
-      console.warn('Cart is empty');
-      return;
-    }    
+    // if(productIds.length === 0) {
+    //   console.warn('Cart is empty');
+    //   return;
+    // }    
   
     this.productService.getProductsByIds(productIds).subscribe({
       next: (apiResponse: ApiResponse) => {            
@@ -125,20 +131,45 @@ export class OrderComponent{
   }
   placeOrder() {
     debugger
-    this.orderService.placeOrder(this.orderData).subscribe({
-      next: (response) => {            
-        debugger                
-        console.log('Đặt hàng thành công');
-      },
-      complete: () => {
-        debugger;
-        this.calculateTotal()
-      },
-      error: (error: any) => {
-        debugger;
-        console.error('Lỗi khi đặt hàng:', error);
-      }
-    });        
+    if (this.orderForm.valid) {
+      // Gán giá trị từ form vào đối tượng orderData
+      /*
+      this.orderData.fullname = this.orderForm.get('fullname')!.value;
+      this.orderData.email = this.orderForm.get('email')!.value;
+      this.orderData.phone_number = this.orderForm.get('phone_number')!.value;
+      this.orderData.address = this.orderForm.get('address')!.value;
+      this.orderData.note = this.orderForm.get('note')!.value;
+      this.orderData.shipping_method = this.orderForm.get('shipping_method')!.value;
+      this.orderData.payment_method = this.orderForm.get('payment_method')!.value;
+      */
+      // Sử dụng toán tử spread (...) để sao chép giá trị từ form vào orderData
+      this.orderData = {
+        ...this.orderData,
+        ...this.orderForm.value
+      };
+      this.orderData.cart_items = this.cartItems.map(cartItem => ({
+        product_id: cartItem.product.productId,
+        quantity: cartItem.quantity
+      }));
+      // Dữ liệu hợp lệ, bạn có thể gửi đơn hàng đi
+      this.orderService.placeOrder(this.orderData).subscribe({
+        next: (response) => {
+          debugger;
+          console.log('Đặt hàng thành công');
+        },
+        complete: () => {
+          debugger;
+          this.calculateTotal();
+        },
+        error: (error: any) => {
+          debugger;
+          console.error('Lỗi khi đặt hàng:', error);
+        },
+      });
+    } else {
+      // Hiển thị thông báo lỗi hoặc xử lý khác
+      alert('Dữ liệu không hợp lệ. Vui lòng kiểm tra lại.');
+    }        
   }
     
   decreaseQuantity(index: number): void {
@@ -190,10 +221,10 @@ export class OrderComponent{
     // }
   }
   private updateCartFromCartItems(): void {
-    this.cart.clear();
-    this.cartItems.forEach((item) => {
-      this.cart.set(item.product.productId, item.quantity);
-    });
-    this.cartService.setCart(this.cart);
+    // this.cart.clear();
+    // this.cartItems.forEach((item) => {
+    //   this.cart.set(item.product.productId, item.quantity);
+    // });
+    // this.cartService.setCart(this.cart);
   }
 }
