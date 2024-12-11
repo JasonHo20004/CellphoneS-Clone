@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { environment } from '../environments/environment';
 import { Product } from '../models/product';
 import { ApiResponse } from '../responses/api.response';
@@ -45,8 +45,21 @@ export class ProductService {
 
   getProductsByIds(productIds: number[]): Observable<ApiResponse> {
     const params = new HttpParams().set('ids', productIds.join(','));
-    return this.http.get<ApiResponse>(`${this.apiBaseUrl}/products/by-ids`, { params });
+    return this.http.get<ApiResponse>(`${this.apiBaseUrl}/products/by-ids`, { params }).pipe(
+      map(response => {
+        // If the response is already an array, wrap it in the ApiResponse structure
+        if (Array.isArray(response)) {
+          return {
+            message: 'Products fetched successfully',
+            status: 'SUCCESS',
+            data: response
+          };
+        }
+        return response;
+      })
+    );
   }
+  
   deleteProduct(productId: number): Observable<ApiResponse> {
     debugger
     return this.http.delete<ApiResponse>(`${this.apiBaseUrl}/products/${productId}`);

@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { CartService } from '../../services/cart.service';
 import { FooterComponent } from '../footer/footer.component';
 import { HeaderComponent } from '../header/header.component';
 import { Product } from '../../models/product';
@@ -22,9 +24,11 @@ export class DetailProductComponent implements OnInit{
   productId: number = 0;
   loading: boolean = true;
   error: string | null = null;
-  constructor(private productService: ProductService){
-    
-  }
+constructor(
+  private productService: ProductService,
+  private router: Router,
+  private cartService: CartService
+) {}
 
   currentImageIndex: number = 0;
   quantity: number = 1;
@@ -34,7 +38,7 @@ export class DetailProductComponent implements OnInit{
     // const idParam = this.activatedRoute.snapshot.paramMap.get('id');
     debugger
     //this.cartService.clearCart();
-    const idParam = 15 //fake tạm 1 giá trị
+    const idParam = 10 //fake tạm 1 giá trị
     if (idParam !== null) {
       this.productId = +idParam;
     }
@@ -106,14 +110,14 @@ export class DetailProductComponent implements OnInit{
     this.showImage(this.currentImageIndex - 1);
   }
   addToCart(): void {
-    // debugger
-    // this.isPressedAddToCart = true;
-    // if (this.product) {
-    //   this.cartService.addToCart(this.product.id, this.quantity);
-    // } else {
-    //   // Xử lý khi product là null
-    //   console.error('Không thể thêm sản phẩm vào giỏ hàng vì product là null.');
-    // }
+    debugger
+    this.isPressedAddToCart = true;
+    if (this.product) {
+      this.cartService.addToCart(this.product.productId, this.quantity);
+    } else {
+      // Xử lý khi product là null
+      console.error('Không thể thêm sản phẩm vào giỏ hàng vì product là null.');
+    }
   }
 
   increaseQuantity(): void {
@@ -133,9 +137,9 @@ export class DetailProductComponent implements OnInit{
     return 0;
   }
   buyNow(): void {
-    // if (this.isPressedAddToCart == false) {
-    //   this.addToCart();
-    // }
-    // this.router.navigate(['/orders']);
+    if (this.isPressedAddToCart == false) {
+      this.addToCart();
+    }
+    this.router.navigate(['/orders']);
   }
 }
