@@ -9,7 +9,7 @@ import { UserService } from '../../services/user.service';
 import { HttpClientModule } from '@angular/common/http';
 import { LoginResponse } from '../../responses/user/login.response';
 import { TokenService } from '../../services/token.service';
-import { Role } from '../../model/role';
+import { Role } from '../../models/role';
 import { RoleService } from '../../services/role.service';
 
 @Component({

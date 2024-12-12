@@ -17,7 +17,7 @@ import { environment } from '../../environments/environment';
   standalone: true,
   imports: [FooterComponent, HeaderComponent, CommonModule],
   templateUrl: './detail-product.component.html',
-  styleUrl: './detail-product.component.scss'
+  styleUrls: ['./detail-product.component.scss']
 })
 export class DetailProductComponent implements OnInit{
   product?: Product;

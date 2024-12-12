@@ -15,7 +15,7 @@ import { OrderDetail } from '../../models/order.detail';
 @Component({
   selector: 'app-order-detail',
   standalone: true,
-  imports: [FooterComponent, HeaderComponent, CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, HeaderComponent, FooterComponent],
   templateUrl: './order.detail.component.html',
   styleUrl: './order.detail.component.scss',
 })
