@@ -91,12 +91,12 @@ export class OrderComponent{
       next: (apiResponse: ApiResponse) => {            
         debugger
         const products: Product[] = apiResponse.data;
-        console.log('Fetched products (IDs):', products.map(p => p.productId));
+        console.log('Fetched products (IDs):', products.map(p => p.id));
         
         this.cartItems = productIds.map((productId) => {
           debugger
           // Use strict equality checking
-          const product = products.find((p) => p.productId === productId);
+          const product = products.find((p) => p.id === productId);
           const quantity = cart.get(productId);
           
           console.log(`Searching for Product ID: ${productId}, Type: ${typeof productId}`);
@@ -148,7 +148,7 @@ export class OrderComponent{
         ...this.orderForm.value
       };
       this.orderData.cart_items = this.cartItems.map(cartItem => ({
-        product_id: cartItem.product.productId,
+        product_id: cartItem.product.id,
         quantity: cartItem.quantity
       }));
       // Dữ liệu hợp lệ, bạn có thể gửi đơn hàng đi

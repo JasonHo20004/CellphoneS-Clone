@@ -38,7 +38,7 @@ constructor(
     // const idParam = this.activatedRoute.snapshot.paramMap.get('id');
     debugger
     //this.cartService.clearCart();
-    const idParam = 10 //fake tạm 1 giá trị
+    const idParam = 8 //fake tạm 1 giá trị
     if (idParam !== null) {
       this.productId = +idParam;
     }
@@ -113,7 +113,7 @@ constructor(
     debugger
     this.isPressedAddToCart = true;
     if (this.product) {
-      this.cartService.addToCart(this.product.productId, this.quantity);
+      this.cartService.addToCart(this.product.id, this.quantity);
     } else {
       // Xử lý khi product là null
       console.error('Không thể thêm sản phẩm vào giỏ hàng vì product là null.');

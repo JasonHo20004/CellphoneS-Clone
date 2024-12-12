@@ -66,7 +66,8 @@ export class HomeComponent implements OnInit {
     this.productService.getProducts(keyword, selectedBrandId, page, limit).subscribe({
       next: (response: any) => {
         debugger
-        response.products.forEach((product: Product) => {          
+        // console.log('Products:', response.products);
+        response.products.forEach((product: Product) => {      
           product.url = `${environment.apiBaseUrl}/products/images/${product.thumbnail}`;
         });
         this.products = response.products;
@@ -105,6 +106,6 @@ export class HomeComponent implements OnInit {
   onProductClick(productId: number) {
     debugger
     // Điều hướng đến trang detail-product với productId là tham số
-    this.router.navigate(['/detail-product', productId]);
+    this.router.navigate(['/products', productId]);
   }
 }
