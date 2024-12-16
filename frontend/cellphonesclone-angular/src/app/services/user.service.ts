@@ -12,6 +12,7 @@ import { HttpUtilService } from './http.util.service';
 export class UserService {
   private apiRegister = `${environment.apiBaseUrl}/users/register`;
   private apiLogin = `${environment.apiBaseUrl}/users/login`;
+  private apiUserDetail = `${environment.apiBaseUrl}/users/details`;
 
   private apiConfig = {
     headers: this.httpUtilService.createHeaders(),
@@ -30,4 +31,12 @@ export class UserService {
     return this.http.post(this.apiLogin, loginDTO, this.apiConfig);
   }
 
+  getUserDetail(token: string){
+    return this.http.post(this.apiUserDetail, {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`
+      })
+    })
+  }
 }
