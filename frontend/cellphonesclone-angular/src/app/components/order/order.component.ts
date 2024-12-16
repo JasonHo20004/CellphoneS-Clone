@@ -90,7 +90,10 @@ export class OrderComponent{
     this.productService.getProductsByIds(productIds).subscribe({
       next: (apiResponse: ApiResponse) => {            
         debugger
-        const products: Product[] = apiResponse.data;
+        const products: Product[] = apiResponse.data.map((product: { productId: any; }) => ({
+          ...product,
+          id: product.productId  // Add an 'id' property mapping to 'productId'
+        }));
         console.log('Fetched products (IDs):', products.map(p => p.id));
         
         this.cartItems = productIds.map((productId) => {
