@@ -11,6 +11,7 @@ import { LoginResponse } from '../../responses/user/login.response';
 import { TokenService } from '../../services/token.service';
 import { Role } from '../../models/role';
 import { RoleService } from '../../services/role.service';
+import { UserResponse } from '../../responses/user/user.response';
 
 @Component({
   selector: 'app-login',
@@ -23,12 +24,13 @@ import { RoleService } from '../../services/role.service';
 export class LoginComponent {
   @ViewChild('loginForm') loginForm!: NgForm;
 
-  phoneNumber: string ='0961826305';
-  password: string = 'abc123';
+  phoneNumber: string ='091236451';
+  password: string = '123456';
 
   roles: Role[] = []; // Mảng roles
   rememberMe: boolean = true;
   selectedRole: Role | undefined; // Biến để lưu giá trị được chọn từ dropdown
+  userResponse?: UserResponse
 
   onPhoneNumberChange() {
     console.log(`Phone typed: ${this.phoneNumber}`);
@@ -78,31 +80,80 @@ export class LoginComponent {
   //   });
   // }
 
-  login() {
-    const message = `phone: ${this.phoneNumber}` +
-      `password: ${this.password}`;
-    //alert(message);
-    debugger
+  // login() {
+  //   const message = `phone: ${this.phoneNumber}` +
+  //     `password: ${this.password}`;
+  //   //alert(message);
+  //   debugger
 
+  //   const loginDTO: LoginDTO = {
+  //     phone_number: this.phoneNumber,
+  //     password: this.password,
+  //     role_id: this.selectedRole?.id ?? 1
+  //   };
+  //   debugger
+  //   this.userService.login(loginDTO).subscribe({
+  //     next: (response: LoginResponse) => {
+  //       debugger;
+  //       const { token } = response;
+  //       if (this.rememberMe) {
+  //         this.tokenService.setToken(token);
+  //         debugger
+  //       }
+  //       this.userService.getUserDetail(token).subscribe({
+  //         next: (response:any) => {
+  //           debugger
+  //           this.userResponse ={
+  //             ...response,
+  //             date_of_birth: new Date(response.date_of_birth)
+  //           };
+  //           this.userService.saveUserResponseToLocalStorage(this.userResponse)
+  //           this.router.navigate(['/']);
+
+  //         }
+  //       })
+  //     },
+  //     complete: () => {
+  //       debugger;
+  //     },
+  //     error: (error: any) => {
+  //       debugger;
+  //       alert(error.error.message);
+  //     }
+  //   });
+  // }
+
+  login() {
     const loginDTO: LoginDTO = {
       phone_number: this.phoneNumber,
       password: this.password,
       role_id: this.selectedRole?.id ?? 1
     };
+  
     this.userService.login(loginDTO).subscribe({
       next: (response: LoginResponse) => {
-        debugger;
         const { token } = response;
         if (this.rememberMe) {
           this.tokenService.setToken(token);
-        }                
-        //this.router.navigate(['/login']);
-      },
-      complete: () => {
-        debugger;
+        }
+  
+        // Fetch user details
+        this.userService.getUserDetail(token).subscribe({
+          next: (userDetailResponse: UserResponse) => {
+            this.userResponse = {
+              ...userDetailResponse,
+              date_of_birth: new Date(userDetailResponse.date_of_birth) 
+            };
+            this.userService.saveUserResponseToLocalStorage(this.userResponse);
+            this.router.navigate(['/']);
+          },
+          error: (error) => {
+            console.error('Error fetching user details:', error);
+            // Handle error (e.g., show error message)
+          }
+        });
       },
       error: (error: any) => {
-        debugger;
         alert(error.error.message);
       }
     });
