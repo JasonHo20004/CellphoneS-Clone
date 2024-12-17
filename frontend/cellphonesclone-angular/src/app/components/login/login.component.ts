@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FooterComponent } from '../footer/footer.component';
 import { NgForm, FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -21,7 +21,7 @@ import { UserResponse } from '../../responses/user/user.response';
   styleUrl: './login.component.scss'
 })
 
-export class LoginComponent {
+export class LoginComponent implements OnInit {
   @ViewChild('loginForm') loginForm!: NgForm;
 
   phoneNumber: string ='091236451';
