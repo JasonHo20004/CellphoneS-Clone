@@ -135,7 +135,7 @@ constructor(
     debugger
     this.isPressedAddToCart = true;
     if (this.product) {
-      this.cartService.addToCart(this.product.productId, this.quantity);
+      this.cartService.addToCart(this.product.id, this.quantity);
     } else {
       // Xử lý khi product là null
       console.error('Không thể thêm sản phẩm vào giỏ hàng vì product là null.');
