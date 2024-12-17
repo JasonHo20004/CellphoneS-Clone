@@ -3,14 +3,14 @@ import { FooterComponent } from '../footer/footer.component';
 import { NgForm, FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { HttpClientModule } from '@angular/common/http';  // Import HttpClientModule
+// import { HttpClientModule } from '@angular/common/http';
 import { UserService } from '../../services/user.service';
 import { RegisterDTO } from '../../dtos/user/register.dto';
 
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [FooterComponent, FormsModule, CommonModule, HttpClientModule],  // Make sure HttpClientModule is imported here
+  imports: [FooterComponent, FormsModule, CommonModule],  // Make sure HttpClientModule is imported here
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.scss']
 })
