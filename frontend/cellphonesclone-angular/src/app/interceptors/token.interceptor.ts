@@ -5,20 +5,21 @@ import { TokenService } from "../services/token.service";
 
 @Injectable()
 export class TokenInterceptor implements HttpInterceptor {
-  constructor(private tokenService: TokenService) {}
+    constructor(private tokenService: TokenService) { }
 
-  intercept(
-    req: HttpRequest<any>,
-    next: HttpHandler
-  ): Observable<HttpEvent<any>> {
-    const token = this.tokenService.getToken();
-    if (token) {
-      req = req.clone({
-        setHeaders: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+    intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+        const token = this.tokenService.getToken();
+        const isLoginRequest = req.url.includes('/login'); // Exclude login API call
+
+        if (token && !isLoginRequest) {
+            const clonedRequest = req.clone({
+                setHeaders: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            return next.handle(clonedRequest);
+        }
+
+        return next.handle(req); // Handle requests without adding Authorization
     }
-    return next.handle(req);
-  }
 }
