@@ -6,7 +6,7 @@ import { HeaderComponent } from '../header/header.component';
 import { LoginDTO } from '../../dtos/user/login.dto';
 import { Router } from '@angular/router';
 import { UserService } from '../../services/user.service';
-import { HttpClientModule } from '@angular/common/http';
+// import { HttpClientModule } from '@angular/common/http';
 import { LoginResponse } from '../../responses/user/login.response';
 import { TokenService } from '../../services/token.service';
 import { Role } from '../../models/role';
@@ -16,7 +16,7 @@ import { UserResponse } from '../../responses/user/user.response';
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, FooterComponent, FormsModule, HttpClientModule, HeaderComponent],
+  imports: [CommonModule, FooterComponent, FormsModule, HeaderComponent],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
 })
@@ -134,7 +134,8 @@ export class LoginComponent {
       next: (response: LoginResponse) => {
         const { token } = response;
         if (this.rememberMe) {
-          this.tokenService.setToken(token);
+          this.tokenService.setToken(response.token);
+          console.log('Token stored:', token);
         }
   
         // Fetch user details
