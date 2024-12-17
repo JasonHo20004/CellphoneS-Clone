@@ -61,13 +61,12 @@ export class HomeComponent implements OnInit {
     debugger
     this.getProducts(this.keyword, this.selectedBrandId, this.currentPage, this.itemsPerPage);
   }
-  getProducts(keyword: string, selectedBrandId: number, page: number, limit: number) {
-    debugger
-    this.productService.getProducts(keyword, selectedBrandId, page, limit).subscribe({
+  getProducts(keyword: string, selectedCategoryId: number, page: number, limit: number) {
+    debugger;
+    this.productService.getProducts(keyword, selectedCategoryId, page, limit).subscribe({
       next: (response: any) => {
-        debugger
-        // console.log('Products:', response.products);
-        response.products.forEach((product: Product) => {      
+        debugger;
+        response.products.forEach((product: Product) => {          
           product.url = `${environment.apiBaseUrl}/products/images/${product.thumbnail}`;
         });
         this.products = response.products;
@@ -103,9 +102,9 @@ export class HomeComponent implements OnInit {
     return new Array(endPage - startPage + 1).fill(0).map((_, index) => startPage + index);
   }
   // Hàm xử lý sự kiện khi sản phẩm được bấm vào
-  onProductClick(productId: number) {
+  onProductClick(product_id: number) {
     debugger
     // Điều hướng đến trang detail-product với productId là tham số
-    this.router.navigate(['/products', productId]);
+    this.router.navigate(['/products', product_id]);
   }
 }
