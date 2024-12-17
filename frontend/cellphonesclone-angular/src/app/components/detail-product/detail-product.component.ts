@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { CartService } from '../../services/cart.service';
 import { FooterComponent } from '../footer/footer.component';
 import { HeaderComponent } from '../header/header.component';
@@ -23,32 +23,54 @@ export class DetailProductComponent implements OnInit{
   product?: Product;
   productId: number = 0;
   loading: boolean = true;
-  error: string | null = null;
-constructor(
-  private productService: ProductService,
-  private router: Router,
-  private cartService: CartService
-) {}
-
   currentImageIndex: number = 0;
   quantity: number = 1;
   isPressedAddToCart: boolean = false;  
+  error: string | null = null;
+  
+constructor(
+  private productService: ProductService,
+  private router: Router,
+  private cartService: CartService,
+  private activatedRoute: ActivatedRoute
+) {}
+
   ngOnInit() {
     // Lấy productId từ URL      
-    // const idParam = this.activatedRoute.snapshot.paramMap.get('id');
+    const idParam = this.activatedRoute.snapshot.paramMap.get('id');
     debugger
     //this.cartService.clearCart();
-    const idParam = 8 //fake tạm 1 giá trị
+    //const idParam = 9 //fake tạm 1 giá trị
     if (idParam !== null) {
       this.productId = +idParam;
     }
-    if (!isNaN(idParam)) {
-      this.productId = idParam;
-      this.fetchProductDetails();
+    if (!isNaN(this.productId)) {
+      this.productService.getDetailProduct(this.productId).subscribe({
+        next: (response: any) => {            
+          // Lấy danh sách ảnh sản phẩm và thay đổi URL
+          debugger
+          if (response.product_images && response.product_images.length > 0) {
+            response.product_images.forEach((product_image:ProductImage) => {
+              product_image.imageUrl = `${environment.apiBaseUrl}/products/images/${product_image.imageUrl}`;
+              debugger
+            });
+          }            
+          debugger
+          this.product = response 
+          // Bắt đầu với ảnh đầu tiên
+          this.showImage(0);
+        },
+        complete: () => {
+          debugger;
+        },
+        error: (error: any) => {
+          debugger;
+          console.error('Error fetching detail:', error);
+        }
+      });    
     } else {
-      this.error = 'Invalid product ID';
-      this.loading = false;
-    }
+      console.error('Invalid productId:', idParam);
+    }      
   }
   
   private fetchProductDetails(): void {
@@ -113,7 +135,7 @@ constructor(
     debugger
     this.isPressedAddToCart = true;
     if (this.product) {
-      this.cartService.addToCart(this.product.id, this.quantity);
+      this.cartService.addToCart(this.product.productId, this.quantity);
     } else {
       // Xử lý khi product là null
       console.error('Không thể thêm sản phẩm vào giỏ hàng vì product là null.');
