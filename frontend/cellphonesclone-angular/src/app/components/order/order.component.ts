@@ -12,6 +12,9 @@ import { CartService } from '../../services/cart.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { OrderService } from '../../services/order.service';
 import { ProductService } from '../../services/product.service';
+import { Router, ActivatedRoute } from '@angular/router';
+import { privateDecrypt } from 'crypto';
+import { TokenService } from '../../services/token.service';
 
 @Component({
   selector: 'app-order',
@@ -43,7 +46,9 @@ export class OrderComponent{
     private cartService: CartService,
     private productService: ProductService,
     private orderService: OrderService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private router: Router,
+    private tokenService: TokenService,
   ) {
     this.orderForm = this.fb.group({
       fullname: ['Ho Thanh X', Validators.required], // fullname là FormControl bắt buộc      
@@ -74,18 +79,19 @@ export class OrderComponent{
   ngOnInit(): void {  
     debugger
     // Ensure cart is refreshed
-    this.cartService.refreshCart();
-  
+    //this.cartService.clearCart();
+    this.orderData.user_id = this.tokenService.getUserId();
+
     const cart = this.cartService.getCart();
     console.log('Cart contents (keys):', Array.from(cart.keys())); 
   
     const productIds = Array.from(cart.keys());    
     console.log('Product IDs in cart:', productIds);
   
-    // if(productIds.length === 0) {
-    //   console.warn('Cart is empty');
-    //   return;
-    // }    
+    if(productIds.length === 0) {
+      console.warn('Cart is empty');
+      return;
+    }    
   
     this.productService.getProductsByIds(productIds).subscribe({
       next: (apiResponse: ApiResponse) => {            
@@ -94,12 +100,12 @@ export class OrderComponent{
           ...product,
           id: product.productId  // Add an 'id' property mapping to 'productId'
         }));
-        console.log('Fetched products (IDs):', products.map(p => p.id));
+        console.log('Fetched products (IDs):', products.map(p => p.productId));
         
         this.cartItems = productIds.map((productId) => {
           debugger
           // Use strict equality checking
-          const product = products.find((p) => p.id === productId);
+          const product = products.find((p) => p.productId === productId);
           const quantity = cart.get(productId);
           
           console.log(`Searching for Product ID: ${productId}, Type: ${typeof productId}`);
@@ -151,7 +157,7 @@ export class OrderComponent{
         ...this.orderForm.value
       };
       this.orderData.cart_items = this.cartItems.map(cartItem => ({
-        product_id: cartItem.product.id,
+        product_id: cartItem.product.productId,
         quantity: cartItem.quantity
       }));
       // Dữ liệu hợp lệ, bạn có thể gửi đơn hàng đi
@@ -159,6 +165,8 @@ export class OrderComponent{
         next: (response) => {
           debugger;
           console.log('Đặt hàng thành công');
+          this.cartService.clearCart();
+          this.router.navigate(['/orders/', response.id]);
         },
         complete: () => {
           debugger;
