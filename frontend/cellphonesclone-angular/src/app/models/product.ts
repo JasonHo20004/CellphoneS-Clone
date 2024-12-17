@@ -1,6 +1,6 @@
 import { ProductImage } from "./product.image";
 export interface Product {
-  id: number;
+  productId: number;
   name: string;
   price: number;
   thumbnail: string;
@@ -21,5 +21,29 @@ export interface Product {
   brand_id?: number;
 }
 
-  
-  
+export function mapJsonToProduct(data: any): Product {
+  return {
+    productId: data.productId, // Map productId to id
+    name: data.name,
+    price: data.price,
+    thumbnail: data.thumbnail,
+    description: data.description,
+    category_id: data.brand?.id, // Assuming you want to use brand_id as category_id
+    url: data.thumbnail, // Or generate a URL if needed
+    product_images: data.productImages.map((img: any) => ({
+      id: img.id,
+      imageUrl: img.imageUrl
+    })),
+    operating_system: data.operatingSystem,
+    screen_size: data.screenSize,
+    battery_capacity: data.batteryCapacity,
+    ram: data.ram,
+    rom: data.rom,
+    front_camera: data.frontCamera,
+    main_camera: data.mainCamera,
+    color: data.color,
+    release_date: data.releaseDate,
+    in_stock: data.inStock,
+    brand_id: data.brand?.id
+  };
+}
