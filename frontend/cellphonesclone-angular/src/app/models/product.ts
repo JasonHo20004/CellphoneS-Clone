@@ -1,6 +1,6 @@
 import { ProductImage } from "./product.image";
 export interface Product {
-  productId: number;
+  id: number;
   name: string;
   price: number;
   thumbnail: string;
@@ -23,7 +23,7 @@ export interface Product {
 
 export function mapJsonToProduct(data: any): Product {
   return {
-    productId: data.productId, // Map productId to id
+    id: data.productId, // Map productId to id
     name: data.name,
     price: data.price,
     thumbnail: data.thumbnail,
