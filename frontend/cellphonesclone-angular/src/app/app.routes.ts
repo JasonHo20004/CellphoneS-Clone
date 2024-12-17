@@ -22,7 +22,7 @@ export const routes: Routes = [
   { path: 'products/:id', component: DetailProductComponent },  
   { path: 'orders', component: OrderComponent },
 //   { path: 'user-profile', component: UserProfileComponent, canActivate:[AuthGuardFn] },
-  { path: 'orders/:id', component: OrderDetailComponent },
+  { path: 'orders/:orderId', component: OrderDetailComponent },
   //Admin   
 //   { 
 //     path: 'admin', 
