@@ -29,7 +29,7 @@ export class OrderComponent{
   couponCode: string = ''; // Mã giảm giá
   totalAmount: number = 0; // Tổng tiền
   orderData: OrderDTO = {
-    user_id: 17, // Thay bằng user_id thích hợp
+    user_id: 0, // Thay bằng user_id thích hợp
     fullname: '', // Khởi tạo rỗng, sẽ được điền từ form
     email: '', // Khởi tạo rỗng, sẽ được điền từ form
     phone_number: '', // Khởi tạo rỗng, sẽ được điền từ form
@@ -76,38 +76,35 @@ export class OrderComponent{
   //   // });
   // }
   
-  ngOnInit(): void {  
-    debugger
-    // Ensure cart is refreshed
-    //this.cartService.clearCart();
+  ngOnInit(): void {
+    debugger;
     this.orderData.user_id = this.tokenService.getUserId();
-
-    const cart = this.cartService.getCart();
-    console.log('Cart contents (keys):', Array.from(cart.keys())); 
   
-    const productIds = Array.from(cart.keys());    
+    const cart = this.cartService.getCart();
+    console.log('Cart contents (keys):', Array.from(cart.keys()));
+  
+    const productIds = Array.from(cart.keys());
     console.log('Product IDs in cart:', productIds);
   
-    if(productIds.length === 0) {
+    if (productIds.length === 0) {
       console.warn('Cart is empty');
       return;
-    }    
+    }
   
     this.productService.getProductsByIds(productIds).subscribe({
-      next: (apiResponse: ApiResponse) => {            
-        debugger
-        const products: Product[] = apiResponse.data.map((product: { productId: any; }) => ({
+      next: (apiResponse: ApiResponse) => {
+        debugger;
+        const products: Product[] = apiResponse.data.map((product: any) => ({
           ...product,
-          id: product.productId  // Add an 'id' property mapping to 'productId'
+          id: product.productId, // Map 'productId' from API to 'id'
         }));
-        console.log('Fetched products (IDs):', products.map(p => p.productId));
-        
+        console.log('Fetched products (IDs):', products.map((p) => p.id));
+  
         this.cartItems = productIds.map((productId) => {
-          debugger
-          // Use strict equality checking
-          const product = products.find((p) => p.productId === productId);
+          debugger;
+          const product = products.find((p) => p.id === productId); // Use 'id' for matching
           const quantity = cart.get(productId);
-          
+  
           console.log(`Searching for Product ID: ${productId}, Type: ${typeof productId}`);
           console.log(`Quantity from cart: ${quantity}`);
           console.log('Matching product:', product);
@@ -124,20 +121,22 @@ export class OrderComponent{
   
           // Ensure thumbnail is fully qualified
           product.thumbnail = `${environment.apiBaseUrl}/products/images/${product.thumbnail}`;
-          
+  
           return {
             product: product,
-            quantity: quantity
+            quantity: quantity,
           };
         });
+  
         console.log('Final Cart Items:', this.cartItems);
         this.calculateTotal();
       },
       error: (error) => {
         console.error('Error processing cart items:', error);
-      }
-    });        
+      },
+    });
   }
+  
   placeOrder() {
     debugger
     if (this.orderForm.valid) {
@@ -157,7 +156,7 @@ export class OrderComponent{
         ...this.orderForm.value
       };
       this.orderData.cart_items = this.cartItems.map(cartItem => ({
-        product_id: cartItem.product.productId,
+        product_id: cartItem.product.id, // Sử dụng productId
         quantity: cartItem.quantity
       }));
       // Dữ liệu hợp lệ, bạn có thể gửi đơn hàng đi

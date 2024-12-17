@@ -11,6 +11,7 @@ import { FormsModule } from '@angular/forms';
 import { OrderResponse } from '../../responses/order/order.response';
 import { OrderService } from '../../services/order.service';
 import { OrderDetail } from '../../models/order.detail';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-order-detail',
@@ -21,7 +22,7 @@ import { OrderDetail } from '../../models/order.detail';
 })
 export class OrderDetailComponent implements OnInit {
   orderResponse: OrderResponse = {
-    id: 0, // Hoặc bất kỳ giá trị số nào
+    id: 1, // Hoặc bất kỳ giá trị số nào
     user_id: 0,
     fullname: '',
     phone_number: '',
@@ -43,7 +44,8 @@ export class OrderDetailComponent implements OnInit {
   totalAmount: number = 0; // Tổng tiền
 
   constructor(
-    private orderService: OrderService
+    private orderService: OrderService,
+    private route: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
@@ -52,7 +54,7 @@ export class OrderDetailComponent implements OnInit {
 
   getOrderDetails(): void {
     debugger
-    const orderId = 3; // Thay bằng ID của đơn hàng muốn lấy.
+    const orderId = Number(this.route.snapshot.paramMap.get('orderId'));
     this.orderService.getOrderById(orderId).subscribe({
       next: (response: any) => {        
         debugger;       
