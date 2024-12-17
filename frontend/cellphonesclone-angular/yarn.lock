@@ -1542,6 +1542,13 @@
   dependencies:
     call-bind "^1.0.7"
 
+"@ng-bootstrap/ng-bootstrap@^17.0.1":
+  version "17.0.1"
+  resolved "https://registry.yarnpkg.com/@ng-bootstrap/ng-bootstrap/-/ng-bootstrap-17.0.1.tgz#76e37b738618b42a2e1958f3378cb75f0557d117"
+  integrity sha512-utbm8OXIoqVVYGVzQkOS773ymbjc+UMkXv8lyi7hTqLhCQs0rZ0yA74peqVZRuOGXLHgcSTA7fnJhA80iQOblw==
+  dependencies:
+    tslib "^2.3.0"
+
 "@ngtools/webpack@17.3.11":
   version "17.3.11"
   resolved "https://registry.yarnpkg.com/@ngtools/webpack/-/webpack-17.3.11.tgz#7fda88d850489d8b0bf0812a582052da27150e58"
@@ -1654,6 +1661,11 @@
   version "0.11.0"
   resolved "https://registry.yarnpkg.com/@pkgjs/parseargs/-/parseargs-0.11.0.tgz#a77ea742fab25775145434eb1d2328cf5013ac33"
   integrity sha512-+1VkjdD0QBLPodGrJUeqarH8VAIvQODIbwh9XpP5Syisf7YoQgsJKPNFoqqLQlu+VQ/tVSshMR6loPMn8U+dPg==
+
+"@popperjs/core@^2.11.8":
+  version "2.11.8"
+  resolved "https://registry.yarnpkg.com/@popperjs/core/-/core-2.11.8.tgz#6b79032e760a0899cd4204710beede972a3a185f"
+  integrity sha512-P1st0aksCrn9sGZhp8GMYwBnQsbvAWsZAX44oXNNvLHGqAOcoVxmjZiohstwQ7SqKnbR47akdNi+uleWD8+g6A==
 
 "@rollup/rollup-android-arm-eabi@4.28.1":
   version "4.28.1"
